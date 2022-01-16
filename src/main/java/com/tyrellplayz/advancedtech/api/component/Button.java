@@ -60,7 +60,6 @@ public class Button extends Component {
 
     public void render(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
         if (this.isVisible()) {
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, BUTTON_TEXTURES);
             byte flag;
             if (this.isEnabled()) {
@@ -77,15 +76,25 @@ public class Button extends Component {
             if (this.customRender != null) {
                 this.customRender.render(stack, this.getXPos(), this.getYPos(), this.getWidth(), this.getHeight(), flag);
             } else {
-                RenderUtil.drawRectWithTexture(stack,this.getXPos(), this.getYPos(), 0, buttonV, 2, 2, 2, 2);
-                RenderUtil.drawRectWithTexture(stack,this.getXPos() + (double)this.getWidth() - 2.0D, this.getYPos(), 198, buttonV, 2, 2, 2, 2);
-                RenderUtil.drawRectWithTexture(stack,this.getXPos() + (double)this.getWidth() - 2.0D, this.getYPos() + (double)this.getHeight() - 2.0D, 198, (buttonV + 20 - 2), 2, 2, 2, 2);
-                RenderUtil.drawRectWithTexture(stack,this.getXPos(), this.getYPos() + (double)this.getHeight() - 2.0D, 0, (buttonV + 20 - 2), 2, 2, 2, 2);
-                RenderUtil.drawRectWithTexture(stack,this.getXPos() + 2.0D, this.getYPos(), 2, buttonV, this.getWidth() - 4, 2, 1, 2);
-                RenderUtil.drawRectWithTexture(stack,this.getXPos() + (double)this.getWidth() - 2.0D, this.getYPos() + 2.0D, 198, (buttonV + 2), 2, this.getHeight() - 4, 2, 1);
-                RenderUtil.drawRectWithTexture(stack,this.getXPos() + 2.0D, this.getYPos() + (double)this.getHeight() - 2.0D, 3, (buttonV + 20 - 2), this.getWidth() - 4, 2, 1, 2);
-                RenderUtil.drawRectWithTexture(stack,this.getXPos(), this.getYPos() + 2.0D, 0, (buttonV + 2), 2, this.getHeight() - 4, 2, 1);
-                RenderUtil.drawRectWithTexture(stack,this.getXPos() + 2.0D, this.getYPos() + 2.0D, 2, (buttonV + 2), this.getWidth() - 4, this.getHeight() - 4, 1, 1);
+                // Top Left Corner
+                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos(), this.getYPos(), 0, buttonV, 2, 2, 2, 2);
+                // Top Right Corner
+                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + (double)this.getWidth() - 2.0D, this.getYPos(), 198, buttonV, 2, 2, 2, 2);
+                // Bottom Right Corner
+                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + (double)this.getWidth() - 2.0D, this.getYPos() + (double)this.getHeight() - 2.0D, 198, (buttonV + 20 - 2), 2, 2, 2, 2);
+                // Bottom Left Corner
+                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos(), this.getYPos() + (double)this.getHeight() - 2.0D, 0, (buttonV + 20 - 2), 2, 2, 2, 2);
+
+                // Top
+                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + 2.0D, this.getYPos(), 2, buttonV, this.getWidth() - 4, 2, 1, 2);
+                // Right
+                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + (double)this.getWidth() - 2.0D, this.getYPos() + 2.0D, 198, (buttonV + 2), 2, this.getHeight() - 4, 2, 1);
+                // Bottom
+                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + 2.0D, this.getYPos() + (double)this.getHeight() - 2.0D, 3, (buttonV + 20 - 2), this.getWidth() - 4, 2, 1, 2);
+                // Left
+                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos(), this.getYPos() + 2.0D, 0, (buttonV + 2), 2, this.getHeight() - 4, 2, 1);
+                // Center
+                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + 2.0D, this.getYPos() + 2.0D, 2, (buttonV + 2), this.getWidth() - 4, this.getHeight() - 4, 1, 1);
             }
 
             if (!Strings.isNullOrEmpty(this.text)) {
@@ -100,8 +109,6 @@ public class Button extends Component {
             if (this.icon != null) {
                 this.icon.render(stack, this.getXPos() + 3.0D, this.getYPos() + 3.0D, 12, 12);
             }
-
-            RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 0.0F);
         }
     }
 

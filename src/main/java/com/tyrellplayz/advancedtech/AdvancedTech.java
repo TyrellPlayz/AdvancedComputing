@@ -1,6 +1,8 @@
 package com.tyrellplayz.advancedtech;
 
 import com.tyrellplayz.advancedtech.api.content.application.ApplicationType;
+import com.tyrellplayz.advancedtech.api.system.filesystem.FileExtension;
+import com.tyrellplayz.advancedtech.api.system.filesystem.FileExtensionManager;
 import com.tyrellplayz.advancedtech.core.ATBlockEntities;
 import com.tyrellplayz.advancedtech.core.ATBlocks;
 import com.tyrellplayz.advancedtech.core.ATItems;
@@ -80,6 +82,8 @@ public class AdvancedTech {
         NETWORK.registerHandshakeMessage(SUpdateApplicationDataHandshake.class);
 
         TaskManager.get().registerTask(UpdateSystemDataTask.class);
+
+        FileExtensionManager.get().registerExtension(new FileExtension("note",new ResourceLocation(MOD_ID,"note")));
     }
 
     private void setup(final FMLCommonSetupEvent event) {

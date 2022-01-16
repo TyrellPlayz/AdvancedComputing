@@ -120,6 +120,8 @@ public class ItemList<T> extends ScrollableComponent {
         int fontHeight;
         double y;
         int width;
+
+        // Draws the hover selection box.
         if (this.hoverIndex != -1) {
             fontHeight = 9 + 2;
             y = relativeY - 2.0D + (double)(fontHeight * this.hoverIndex);
@@ -128,13 +130,14 @@ public class ItemList<T> extends ScrollableComponent {
                 width = this.getWidth() - 5;
             }
 
-            RenderUtil.drawRectWithColour(stack,this.getXPos(), y, width, fontHeight, new Color(255, 255, 255, 60));
+            RenderUtil.drawRectWithColour(stack,this.getXPos()+1, y, width, fontHeight, new Color(255, 255, 255, 60));
             if (this.getTooltip() != null) {
                 double toolTipY = relativeY - 2.0D + (double)(fontHeight * this.hoverIndex);
                 this.getTooltip().setPos(this.getXPos() + 3.0D, toolTipY - (double)this.getTooltip().getHeight());
             }
         }
 
+        // Draws the selection box
         if (this.getSelectedItem() != null) {
             fontHeight = 9 + 2;
             y = relativeY - 2.0D + (double)(fontHeight * this.selectedIndex);

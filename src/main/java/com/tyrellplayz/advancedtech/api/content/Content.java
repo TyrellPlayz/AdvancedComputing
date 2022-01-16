@@ -11,6 +11,7 @@ public abstract class Content implements IScreenEventListener {
     private IWindow<? extends Content> window;
     private boolean border = true;
     private boolean movable = true;
+    private boolean showIcon = true;
 
     public Content() { }
 
@@ -50,4 +51,11 @@ public abstract class Content implements IScreenEventListener {
         this.movable = movable;
     }
 
+    public boolean iconIsShown() {
+        return showIcon;
+    }
+
+    public void setShowIcon(boolean showIcon) {
+        this.showIcon = showIcon;
+    }
 }

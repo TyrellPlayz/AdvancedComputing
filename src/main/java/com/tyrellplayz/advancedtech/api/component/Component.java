@@ -1,6 +1,7 @@
 package com.tyrellplayz.advancedtech.api.component;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.tyrellplayz.advancedtech.AdvancedTech;
 import com.tyrellplayz.advancedtech.api.content.Layer;
 import com.tyrellplayz.advancedtech.api.system.Tooltip;
 import com.tyrellplayz.advancedtech.api.util.Animation;
@@ -10,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public abstract class Component implements IScreenEventListener {
 
-    protected static final ResourceLocation COMPONENT_TEXTURES = new ResourceLocation("techcraft","textures/gui/components.png");
+    protected static final ResourceLocation COMPONENT_TEXTURES = new ResourceLocation(AdvancedTech.MOD_ID,"textures/gui/components.png");
 
     // X and Y position of the component.
     protected double xPos, yPos;

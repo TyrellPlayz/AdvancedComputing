@@ -79,10 +79,10 @@ public class FileBrowser extends ItemList<FileSystemItem> {
         if (this.isItemSelected()) {
             FileSystemItem fileSystemItem = this.getSelectedItem();
             if (this.clicked && this.lastItemIndex == this.selectedIndex) {
-                ArrayList fileSystemItemList;
+                ArrayList<FileSystemItem> fileSystemItemList;
                 if (fileSystemItem instanceof Folder) {
                     this.currentFolder = (Folder)fileSystemItem;
-                    fileSystemItemList = new ArrayList();
+                    fileSystemItemList = new ArrayList<>();
                     fileSystemItemList.addAll(this.currentFolder.getChildFolders());
                     fileSystemItemList.addAll(this.currentFolder.getFiles());
                     this.setItems(fileSystemItemList);
@@ -99,7 +99,7 @@ public class FileBrowser extends ItemList<FileSystemItem> {
                     }
                 } else if (fileSystemItem instanceof BackFolder && !this.currentFolder.getPath().equals("Root")) {
                     this.currentFolder = this.currentFolder.getParentFolder();
-                    fileSystemItemList = new ArrayList();
+                    fileSystemItemList = new ArrayList<>();
                     fileSystemItemList.addAll(this.currentFolder.getChildFolders());
                     fileSystemItemList.addAll(this.currentFolder.getFiles());
                     this.setItems(fileSystemItemList);
@@ -147,7 +147,7 @@ public class FileBrowser extends ItemList<FileSystemItem> {
         Folder parentFolder = this.currentFolder.getParentFolder();
         if (parentFolder != null) {
             this.currentFolder = parentFolder;
-            List<FileSystemItem> fileSystemItemList = new ArrayList();
+            List<FileSystemItem> fileSystemItemList = new ArrayList<>();
             fileSystemItemList.addAll(this.currentFolder.getChildFolders());
             fileSystemItemList.addAll(this.currentFolder.getFiles());
             this.setItems(fileSystemItemList);
@@ -159,7 +159,7 @@ public class FileBrowser extends ItemList<FileSystemItem> {
     }
 
     public void update() {
-        List<FileSystemItem> fileSystemItems = new ArrayList();
+        List<FileSystemItem> fileSystemItems = new ArrayList<>();
         fileSystemItems.addAll(this.currentFolder.getChildFolders());
         fileSystemItems.addAll(this.currentFolder.getFiles());
         this.setItems(fileSystemItems);

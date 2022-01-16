@@ -39,7 +39,7 @@ public interface Icon {
         RenderSystem.setShaderColor(this.getColour().getRed() / 255.0F, this.getColour().getGreen() / 255.0F,this.getColour().getBlue() / 255.0F,this.getColour().getAlpha() / 255.0F);
         RenderSystem.setShaderTexture(0,getImageLocation());
         RenderUtil.drawRectWithTexture(stack,x,y,getU(),getV(),width,height,getWidth(),getHeight(),getImageWidth(),getImageHeight());
-        RenderSystem.setShaderColor(0.0F, 0.0F,0.0F,0.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F,1.0F,1.0F);
     }
 
 }

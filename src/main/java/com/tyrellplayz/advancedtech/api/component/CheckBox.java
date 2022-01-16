@@ -35,7 +35,7 @@ public class CheckBox extends Component{
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, COMPONENT_TEXTURES);
             int tex_y = 20 * this.getFlag();
-            RenderUtil.drawRectWithTexture(stack,this.getXPos(), this.getYPos(), 0, tex_y, this.getWidth(), this.getHeight(), 20, 20);
+            RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos(), this.getYPos(), 0, tex_y, this.getWidth(), this.getHeight(), 20, 20);
             if (!Strings.isNullOrEmpty(this.text)) {
                 double x = this.getXPos() + 2.0D + (double)this.getWidth();
                 RenderUtil.drawText(stack, this.text, x, this.getYPos() + 1.0F, Color.WHITE);

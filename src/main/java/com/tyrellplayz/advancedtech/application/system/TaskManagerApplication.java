@@ -5,6 +5,7 @@ import com.tyrellplayz.advancedtech.api.component.Component;
 import com.tyrellplayz.advancedtech.api.component.ItemList;
 import com.tyrellplayz.advancedtech.api.content.Layer;
 import com.tyrellplayz.advancedtech.api.content.application.Application;
+import com.tyrellplayz.advancedtech.api.icon.Icon;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
 public class TaskManagerApplication extends Application {
 
     private Button btnEndTask;
-    private ItemList<TaskManagerApplication.TaskManagerItem> itemListApplications;
+    private ItemList<TaskManagerItem> itemListApplications;
     int tick;
 
     public void onLoad() {
@@ -22,11 +23,12 @@ public class TaskManagerApplication extends Application {
         this.btnEndTask = new Button(2, 2, "End Task");
         this.btnEndTask.setEnabled(false);
         this.btnEndTask.setAlignment(Component.Alignment.BOTTOM_LEFT);
-        this.itemListApplications = new ItemList<TaskManagerApplication.TaskManagerItem>(2, 2, layer.getWidth() - 4, layer.getHeight() - 18 - 6);
+
+        this.itemListApplications = new ItemList<>(2, 2, layer.getWidth() - 4, layer.getHeight() - 18 - 6);
         Application[] applications = this.getWindow().getComputer().getRunningApplications();
 
         for (Application runningApplication : applications) {
-            this.itemListApplications.getItems().add(new TaskManagerItem(runningApplication.getApplicationManifest().getId(), runningApplication.getApplicationManifest().getName()));
+            this.itemListApplications.getItems().add(new TaskManagerItem(runningApplication.getApplicationManifest().getId(), runningApplication.getApplicationManifest().getName(), runningApplication.getApplicationManifest().getIcon()));
         }
 
         Collections.sort(this.itemListApplications.getItems());
@@ -34,6 +36,9 @@ public class TaskManagerApplication extends Application {
             this.btnEndTask.setEnabled(item != null);
 
         });
+        itemListApplications.setGetIcon(TaskManagerItem::getIcon);
+
+
         this.btnEndTask.setClickListener((mouseButton) -> {
             TaskManagerApplication.TaskManagerItem item = this.itemListApplications.getSelectedItem();
             if (item != null) {
@@ -50,11 +55,11 @@ public class TaskManagerApplication extends Application {
     public void onTick() {
         ++this.tick;
         if (this.tick >= 20) {
-            List<TaskManagerApplication.TaskManagerItem> taskManagerItems = new ArrayList<>();
+            List<TaskManagerItem> taskManagerItems = new ArrayList<>();
             Application[] applications = this.getWindow().getComputer().getRunningApplications();
 
             for (Application runningApplication : applications) {
-                taskManagerItems.add(new TaskManagerItem(runningApplication.getApplicationManifest().getId(), runningApplication.getApplicationManifest().getName()));
+                taskManagerItems.add(new TaskManagerItem(runningApplication.getApplicationManifest().getId(), runningApplication.getApplicationManifest().getName(), runningApplication.getApplicationManifest().getIcon()));
             }
 
             Collections.sort(taskManagerItems);
@@ -67,10 +72,12 @@ public class TaskManagerApplication extends Application {
     public static class TaskManagerItem implements Comparable<TaskManagerApplication.TaskManagerItem> {
         private final ResourceLocation id;
         private final String name;
+        private final Icon icon;
 
-        public TaskManagerItem(ResourceLocation id, String name) {
+        public TaskManagerItem(ResourceLocation id, String name, Icon icon) {
             this.id = id;
             this.name = name;
+            this.icon = icon;
         }
 
         public ResourceLocation getId() {
@@ -79,6 +86,10 @@ public class TaskManagerApplication extends Application {
 
         public String getName() {
             return this.name;
+        }
+
+        public Icon getIcon() {
+            return icon;
         }
 
         public String toString() {

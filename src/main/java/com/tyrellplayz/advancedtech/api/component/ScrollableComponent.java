@@ -115,8 +115,12 @@ public abstract class ScrollableComponent extends Component {
         double scale = client.getWindow().getGuiScale();
         GL11.glEnable(3089);
         GL11.glScissor((int)(this.getXPos() * scale), (int)((double)client.getWindow().getHeight() - (this.getYPos() + (double)this.getHeight() - 1.0D) * scale), (int)((double)(this.getWidth() - 1) * scale), (int)((double)(this.getHeight() - 1) * scale));
+
+        // Box Background
         RenderUtil.drawRectWithColour(stack,this.getXPos(), this.getYPos(), this.getWidth(), this.getHeight(), this.backgroundColour.darker().darker());
+        // Box Foreground
         RenderUtil.drawRectWithColour(stack,this.getXPos() + 1.0D, this.getYPos() + 1.0D, this.getWidth() - 1, this.getHeight() - 1, this.backgroundColour);
+
         double baseY = this.getYPos() + 4.0D - (double)((int)this.scrollDistance);
         this.drawPanel(stack, this.getXPos() + (double)this.getWidth(), baseY, mouseX, mouseY);
         RenderSystem.disableDepthTest();

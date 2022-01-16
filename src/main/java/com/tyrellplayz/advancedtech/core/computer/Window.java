@@ -119,9 +119,9 @@ public class Window<T extends Content> implements IWindow<T> {
                 RenderUtil.drawRectWithColour(stack,this.getX(), this.getY(), this.width, this.height, Color.LIGHT_GRAY);
             }
 
-            this.content.render(stack, (double)mouseX, (double)mouseY, partialTicks);
-        } catch (Exception var7) {
-            this.onError(var7);
+            this.content.render(stack, mouseX, mouseY, partialTicks);
+        } catch (Exception e) {
+            this.onError(e);
         }
 
     }
