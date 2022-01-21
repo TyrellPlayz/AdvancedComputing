@@ -20,7 +20,7 @@ public class Button extends Component {
     private String text;
     private Icon icon;
     private ClickListener clickListener;
-    private CustomRender customRender;
+    private CustomRender<Button> customRender;
 
     public Button(int left, int top, int width) {
         super(left, top, MathsUtil.min(width, 18), 18);
@@ -74,7 +74,7 @@ public class Button extends Component {
 
             int buttonV = 46 + flag * 20;
             if (this.customRender != null) {
-                this.customRender.render(stack, this.getXPos(), this.getYPos(), this.getWidth(), this.getHeight(), flag);
+                this.customRender.render(this,stack, this.getXPos(), this.getYPos(), this.getWidth(), this.getHeight(), flag);
             } else {
                 // Top Left Corner
                 RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos(), this.getYPos(), 0, buttonV, 2, 2, 2, 2);
@@ -127,12 +127,26 @@ public class Button extends Component {
         this.clickListener = clickListener;
     }
 
-    public void setCustomRender(CustomRender customRender) {
+    public void setCustomRender(CustomRender<Button> customRender) {
         this.customRender = customRender;
     }
 
     public String getText() {
         return this.text;
+    }
+
+    public static class FlatStyle implements CustomRender<Button> {
+
+        @Override
+        public void render(Button button, PoseStack stack, double x, double y, int width, int height, int flag) {
+            if(button.isHovering()) {
+                RenderUtil.drawRectWithColour(stack,x, y, width, height, new Color(255, 255, 255, 60));
+                RenderUtil.drawRectWithColour(stack,x, y, width, 1, Color.WHITE);
+                RenderUtil.drawRectWithColour(stack,x, y + (double)height, width, 1, Color.WHITE);
+                RenderUtil.drawRectWithColour(stack,x, y, 1, height, Color.WHITE);
+                RenderUtil.drawRectWithColour(stack,x + (double)width - 1.0D, y, 1, height + 1, Color.WHITE);
+            }
+        }
     }
 
 }

@@ -31,6 +31,7 @@ public class FileExplorerApplication extends Application {
     private FileSystem fileSystem;
 
     public FileExplorerApplication() {
+        setHasPreferences(true);
     }
 
     public void onLoad() {

@@ -18,6 +18,10 @@ public class TaskManagerApplication extends Application {
     private ItemList<TaskManagerItem> itemListApplications;
     int tick;
 
+    public TaskManagerApplication() {
+
+    }
+
     public void onLoad() {
         Layer layer = new Layer(this, 200, 150);
         this.btnEndTask = new Button(2, 2, "End Task");

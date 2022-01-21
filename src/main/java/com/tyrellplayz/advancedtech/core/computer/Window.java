@@ -95,8 +95,8 @@ public class Window<T extends Content> implements IWindow<T> {
                 RenderUtil.drawRectWithColour(stack,this.getX(), this.getY(), 2, this.height, borderColour);
                 RenderUtil.drawRectWithColour(stack,this.getX() + (double)(this.width - 1) - 1.0D, this.getY(), 2, this.height, borderColour);
                 RenderUtil.drawRectWithColour(stack,this.getX(), this.getY() + (double)(this.height - 1) - 1.0D, this.width, 2, borderColour);
-                if (this.hasIcon()) {
-                    this.icon.render(stack, this.getX() + 1.0D, this.getY() + 1.0D, 7, 7);
+                if (this.hasIcon() && this.iconIsShown()) {
+                    this.icon.render(stack, this.getX() + 2.0D, this.getY() + 1.0D, 7, 7);
                 }
 
                 Color titleColour = Color.WHITE;
@@ -110,7 +110,11 @@ public class Window<T extends Content> implements IWindow<T> {
                 }
 
                 if (this.hasTitle()) {
-                    RenderUtil.drawText(stack, this.getTitle(), this.getX() + 10.0D, this.getY() + 1.0D, titleColour);
+                    double textX = this.getX() + 3.0D;
+                    if(this.hasIcon() && this.iconIsShown()) {
+                        textX += 9.0D;
+                    }
+                    RenderUtil.drawText(stack, this.getTitle(), textX, this.getY() + 1.0D, titleColour);
                 }
 
                 RenderUtil.drawText(stack, "X", this.getX() + (double)this.width - 7.0D, this.getY() + 1.0D, this.exitButtonColour);
@@ -263,6 +267,14 @@ public class Window<T extends Content> implements IWindow<T> {
 
     public void setMovable(boolean movable) {
         this.content.setMovable(movable);
+    }
+
+    public boolean iconIsShown() {
+        return this.content.iconIsShown();
+    }
+
+    public void setShowIcon(boolean showIcon) {
+        this.content.setShowIcon(showIcon);
     }
 
     public boolean isDragging() {

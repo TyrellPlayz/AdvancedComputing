@@ -19,6 +19,9 @@ public interface System {
 
     void updateData();
 
+    /**
+     * @return The settings/preferences of the system. For the moment it's open for anyone but maybe restricted in the future.
+     */
     SystemSettings getSystemSettings();
 
 }

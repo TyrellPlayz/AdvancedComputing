@@ -1,7 +1,6 @@
 package com.tyrellplayz.advancedtech.api.content.application;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.tyrellplayz.advancedtech.AdvancedTech;
 import com.tyrellplayz.advancedtech.api.content.Content;
 import com.tyrellplayz.advancedtech.api.content.Layer;
 import com.tyrellplayz.advancedtech.api.content.LayeredContent;
@@ -9,6 +8,7 @@ import com.tyrellplayz.advancedtech.api.system.IFileSystem;
 import com.tyrellplayz.advancedtech.api.system.IWindow;
 import com.tyrellplayz.advancedtech.api.system.filesystem.Folder;
 import com.tyrellplayz.zlib.util.RenderUtil;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -16,13 +16,17 @@ public abstract class Application extends LayeredContent {
 
     private ApplicationManifest applicationManifest;
     private boolean mouseOver;
-    private ApplicationPreferences preferences = new ApplicationPreferences(this);
+    private ApplicationPreferences preferences;
+
+    private boolean hasPreferences = false;
 
     public Application() {}
 
     @Override
     public void onLoad() {
-        this.preferences.load();
+        if(hasPreferences()) {
+            this.preferences.load();
+        }
         this.setActiveLayer(new Layer(this,100,100));
     }
 
@@ -127,10 +131,6 @@ public abstract class Application extends LayeredContent {
         return applicationManifest;
     }
 
-    public ApplicationPreferences getPreferences() {
-        return preferences;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Application application) {
@@ -145,4 +145,17 @@ public abstract class Application extends LayeredContent {
         this.getWindow().setIcon(this.applicationManifest.getIcon());
     }
 
+    @Nullable
+    public ApplicationPreferences getPreferences() {
+        return preferences;
+    }
+
+    public boolean hasPreferences() {
+        return hasPreferences;
+    }
+
+    public void setHasPreferences(boolean hasPreferences) {
+        if (hasPreferences) preferences = new ApplicationPreferences(this);
+        this.hasPreferences = hasPreferences;
+    }
 }

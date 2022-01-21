@@ -83,6 +83,10 @@ public interface IWindow<T extends Content> extends IScreenEventListener {
 
     void setMovable(boolean movable);
 
+    boolean iconIsShown();
+
+    void setShowIcon(boolean showIcon);
+
     boolean isDragging();
 
     UUID getId();
