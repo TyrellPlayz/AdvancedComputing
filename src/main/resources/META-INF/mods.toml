@@ -1,18 +1,18 @@
 modLoader="javafml" #mandatory
 loaderVersion="${loader_version_range}" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
 license="GPLv3"
-issueTrackerURL="https://github.com/TyrellPlayz/AdvancedTech/issues" #optional
+issueTrackerURL="https://github.com/TyrellPlayz/TechCraft/issues" #optional
 
 [[mods]] #mandatory
-modId="advanced_tech" #mandatory
+modId="tech_craft" #mandatory
 version="${mod_version}" #mandatory
-displayName="Advanced Technology" #mandatory
+displayName="Tech Craft" #mandatory
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 #logoFile="logo.png" #optional
 authors="TyrellPlayz" #optional
 description='''
-Lots of advanced technology.
+A mod that adds technology to Minecraft, mostly computers
 '''
 [[dependencies.advanced_tech]]
     modId="forge"

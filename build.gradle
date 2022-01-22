@@ -15,8 +15,8 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 
 version = "${project.mod_version}"
-group = 'com.tyrellplayz.advanced_tech'
-archivesBaseName = "advanced_tech-${project.minecraft_version}"
+group = 'com.tyrellplayz.tech_craft'
+archivesBaseName = "tech_craft-${project.minecraft_version}"
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -116,7 +116,7 @@ classes.configure {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "Advanced Tech",
+                "Specification-Title"     : "Tech Craft",
                 "Specification-Vendor"    : "TyrellPlayz",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
