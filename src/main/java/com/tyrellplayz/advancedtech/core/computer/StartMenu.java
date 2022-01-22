@@ -67,7 +67,7 @@ public class StartMenu extends Content {
             if (appListItem != null) {
                 appListItem.onClick(integer);
             }
-
+            return true;
         });
         layer.addComponent(applicationList);
         this.setCurrentLayer(layer);

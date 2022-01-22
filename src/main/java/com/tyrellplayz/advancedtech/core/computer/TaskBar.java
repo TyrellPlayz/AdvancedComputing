@@ -55,12 +55,11 @@ public class TaskBar {
     private void drawItems(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         for(int i = 0; i < this.items.size(); ++i) {
             TaskBar.Item item = this.items.get(i);
-            double itemX = this.xPos + (double)(i * 13 + i);
+            double itemX = this.xPos + (double)(i * 16 + 1);
             double itemY = this.yPos + 1.0D;
-            boolean hovering = false;
-            if (RenderUtil.isMouseInside(mouseX, mouseY, (int)itemX, (int)itemY, (int)itemX + 13, (int)itemY + 13)) {
+            // If mouse is hovering over item then show hover effect
+            if (RenderUtil.isMouseWithin(mouseX, mouseY, (int)itemX-1.0D, (int)itemY-1.0D, 15, 15)) {
                 this.drawItemHighlight(stack,itemX, itemY);
-                hovering = true;
             }
 
             if (item.getItemType() == TaskBar.ItemType.APPLICATION) {
@@ -78,15 +77,15 @@ public class TaskBar {
     }
 
     private void drawItemHighlight(PoseStack stack, double x, double y) {
-        RenderUtil.drawRectWithColour(stack,x, y - 1.0D, 14, 16, new Color(255, 255, 255, 50));
+        RenderUtil.drawRectWithColour(stack,x - 1.0D, y - 1.0D, 16, 16, new Color(255, 255, 255, 50));
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int code) {
         for(int i = 0; i < this.items.size(); ++i) {
             TaskBar.Item item = this.items.get(i);
-            double itemX = this.xPos + 1.0D + (double)(i * 14 + i);
+            double itemX = this.xPos + 1.0D + (double)(i * 16 + 1);
             double itemY = this.yPos + 1.0D;
-            if (RenderUtil.isMouseInside((int)mouseX, (int)mouseY, (int)itemX, (int)itemY, (int)itemX + 13, (int)itemY + 13)) {
+            if (RenderUtil.isMouseWithin((int)mouseX, (int)mouseY, (int)itemX-2.0D, (int)itemY-1.0D, 15, 15)) {
                 item.onClick(code);
             }
         }

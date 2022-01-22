@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class ItemList<T> extends ScrollableComponent {
@@ -24,7 +25,7 @@ public class ItemList<T> extends ScrollableComponent {
     private boolean showToolTip = true;
     protected Function<T, String> getName = Object::toString;
     protected Function<T, Icon> getIcon;
-    protected BiConsumer<T, Integer> onItemSelected;
+    protected BiFunction<T, Integer,Boolean> onItemSelected;
 
     public ItemList(int left, int top, int width, int height) {
         super(left, top, width, height);
@@ -92,7 +93,7 @@ public class ItemList<T> extends ScrollableComponent {
         return this.showToolTip;
     }
 
-    public void setOnItemSelected(BiConsumer<T, Integer> onItemSelected) {
+    public void setOnItemSelected(BiFunction<T, Integer,Boolean> onItemSelected) {
         this.onItemSelected = onItemSelected;
     }
 
@@ -171,7 +172,6 @@ public class ItemList<T> extends ScrollableComponent {
                 }
 
                 RenderUtil.drawText(stack, this.getClippedText(text, icon != null), x, relativeY, Color.WHITE);
-                //RenderSystem.disableAlphaTest();
                 RenderSystem.disableBlend();
             }
             relativeY += 9 + 2;
@@ -194,7 +194,10 @@ public class ItemList<T> extends ScrollableComponent {
             if (!this.isMouseInScrollBar(mouseX, mouseY)) {
                 this.selectedIndex = this.findLine(mouseX, mouseY);
                 if (this.onItemSelected != null) {
-                    this.onItemSelected.accept(this.getSelectedItem(), this.selectedIndex);
+                    if(!this.onItemSelected.apply(this.getSelectedItem(), this.selectedIndex)){
+                        deselect();
+                    }
+
                 }
                 return;
             }

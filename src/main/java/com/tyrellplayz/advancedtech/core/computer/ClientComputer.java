@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 public class ClientComputer extends GuiScreen implements ApplicationSystem, IFileSystem {
 
     private final ResourceLocation GUI_SCREEN = new ResourceLocation(AdvancedTech.MOD_ID, "textures/gui/screen.png");
-    private final ResourceLocation WALLPAPER = new ResourceLocation(AdvancedTech.MOD_ID, "textures/gui/wallpaper.png");
 
     public static final int BORDER = 10;
     public final int SCREEN_WIDTH;
@@ -60,7 +59,7 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
         this.idWindowMap = new HashMap<>();
         this.systemFontRenderer = Minecraft.getInstance().font;
         this.systemData = tile.getSystemData();
-        this.systemSettings = new SystemSettings(this.WALLPAPER);
+        this.systemSettings = new SystemSettings();
         this.fileSystem = new FileSystem(this, this.systemData.getCompound("FileSystem"));
         if (tile.getSystemData().contains("settings")) {
             this.systemSettings.read(tile.getSystemData().getCompound("settings"));

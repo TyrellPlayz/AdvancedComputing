@@ -1,5 +1,6 @@
 package com.tyrellplayz.advancedtech.api.system;
 
+import com.tyrellplayz.advancedtech.AdvancedTech;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
@@ -7,8 +8,8 @@ public class SystemSettings {
 
     private ResourceLocation backgroundLocation;
 
-    public SystemSettings(ResourceLocation backgroundLocation) {
-        this.backgroundLocation = backgroundLocation;
+    public SystemSettings() {
+        this.backgroundLocation = new ResourceLocation(AdvancedTech.MOD_ID,"textures/gui/background/hill.png");
     }
 
     public ResourceLocation getBackgroundLocation() {

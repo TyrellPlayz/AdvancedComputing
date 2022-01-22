@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.tyrellplayz.advancedtech.api.icon.Icon;
+import com.tyrellplayz.advancedtech.api.theme.Style;
 import com.tyrellplayz.advancedtech.api.util.CustomRender;
 import com.tyrellplayz.zlib.util.ClickListener;
 import com.tyrellplayz.zlib.util.MathsUtil;
@@ -20,81 +21,67 @@ public class Button extends Component {
     private String text;
     private Icon icon;
     private ClickListener clickListener;
+    private Style<Button> style = new DefaultStyle();
     private CustomRender<Button> customRender;
 
     public Button(int left, int top, int width) {
-        super(left, top, MathsUtil.min(width, 18), 18);
+        this(left, top, MathsUtil.min(width, 18), 18);
+    }
+
+    public Button(int left, int top, int width, int height) {
+        super(left, top, MathsUtil.min(width, 18), height);
     }
 
     public Button(int left, int top, String text) {
-        super(left, top, MathsUtil.min(RenderUtil.getTextWidth(text) + 10, 18), 18);
+        super(left, top, MathsUtil.min(RenderUtil.getTextWidth(text) + 10, 18), DEFAULT_BUTTON_HEIGHT);
         this.text = text;
     }
 
     public Button(int left, int top, int width, String text) {
-        super(left, top, MathsUtil.min(width, 18), 18);
+        this(left, top, MathsUtil.min(width, 18), DEFAULT_BUTTON_HEIGHT);
+    }
+
+    public Button(int left, int top, int width, int height, String text) {
+        super(left, top, MathsUtil.min(width, 18), height);
         this.text = text;
     }
 
     public Button(int left, int top, Icon icon) {
-        super(left, top, MathsUtil.min(icon.getWidth() + 5, 18), 18);
+        super(left, top, MathsUtil.min(icon.getWidth() + PADDING, 18), DEFAULT_BUTTON_HEIGHT);
         this.icon = icon;
     }
 
     public Button(int left, int top, int width, Icon icon) {
-        super(left, top, MathsUtil.min(width, 18), 18);
+        this(left, top, MathsUtil.min(width, 18), DEFAULT_BUTTON_HEIGHT,icon);
+    }
+
+    public Button(int left, int top, int width, int height, Icon icon) {
+        super(left, top, MathsUtil.min(width, 18), height);
         this.icon = icon;
     }
 
     public Button(int left, int top, Icon icon, String text) {
-        super(left, top, MathsUtil.min(RenderUtil.getTextWidth(text) + 10 + icon.getWidth(), 18), 18);
+        super(left, top, MathsUtil.min(RenderUtil.getTextWidth(text) + 10 + icon.getWidth(), 18), DEFAULT_BUTTON_HEIGHT);
         this.icon = icon;
         this.text = text;
     }
 
     public Button(int left, int top, int width, Icon icon, String text) {
-        super(left, top, MathsUtil.min(width, 18), 18);
+        this(left, top, MathsUtil.min(width, 18), DEFAULT_BUTTON_HEIGHT,icon,text);
+    }
+
+    public Button(int left, int top, int width, int height, Icon icon, String text) {
+        super(left, top, MathsUtil.min(width, 18), height);
         this.icon = icon;
         this.text = text;
     }
 
     public void render(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
         if (this.isVisible()) {
-            RenderSystem.setShaderTexture(0, BUTTON_TEXTURES);
-            byte flag;
-            if (this.isEnabled()) {
-                if (this.isHovering()) {
-                    flag = 2;
-                } else {
-                    flag = 1;
-                }
-            } else {
-                flag = 0;
-            }
-
-            int buttonV = 46 + flag * 20;
             if (this.customRender != null) {
-                this.customRender.render(this,stack, this.getXPos(), this.getYPos(), this.getWidth(), this.getHeight(), flag);
+                this.customRender.render(this,stack);
             } else {
-                // Top Left Corner
-                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos(), this.getYPos(), 0, buttonV, 2, 2, 2, 2);
-                // Top Right Corner
-                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + (double)this.getWidth() - 2.0D, this.getYPos(), 198, buttonV, 2, 2, 2, 2);
-                // Bottom Right Corner
-                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + (double)this.getWidth() - 2.0D, this.getYPos() + (double)this.getHeight() - 2.0D, 198, (buttonV + 20 - 2), 2, 2, 2, 2);
-                // Bottom Left Corner
-                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos(), this.getYPos() + (double)this.getHeight() - 2.0D, 0, (buttonV + 20 - 2), 2, 2, 2, 2);
-
-                // Top
-                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + 2.0D, this.getYPos(), 2, buttonV, this.getWidth() - 4, 2, 1, 2);
-                // Right
-                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + (double)this.getWidth() - 2.0D, this.getYPos() + 2.0D, 198, (buttonV + 2), 2, this.getHeight() - 4, 2, 1);
-                // Bottom
-                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + 2.0D, this.getYPos() + (double)this.getHeight() - 2.0D, 3, (buttonV + 20 - 2), this.getWidth() - 4, 2, 1, 2);
-                // Left
-                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos(), this.getYPos() + 2.0D, 0, (buttonV + 2), 2, this.getHeight() - 4, 2, 1);
-                // Center
-                RenderUtil.drawRectWithDefaultTexture(stack,this.getXPos() + 2.0D, this.getYPos() + 2.0D, 2, (buttonV + 2), this.getWidth() - 4, this.getHeight() - 4, 1, 1);
+                style.render(this,stack);
             }
 
             if (!Strings.isNullOrEmpty(this.text)) {
@@ -135,16 +122,53 @@ public class Button extends Component {
         return this.text;
     }
 
-    public static class FlatStyle implements CustomRender<Button> {
+    public static class DefaultStyle extends Style<Button> {
 
         @Override
-        public void render(Button button, PoseStack stack, double x, double y, int width, int height, int flag) {
+        public void render(Button button, PoseStack stack) {
+            RenderSystem.setShaderTexture(0, BUTTON_TEXTURES);
+
+            byte flag;
+            if (button.isEnabled()) {
+                if (button.isHovering()) flag = 2;
+                else flag = 1;
+            } else {
+                flag = 0;
+            }
+
+            int buttonV = 46 + flag * 20;
+            // Top Left Corner
+            RenderUtil.drawRectWithDefaultTexture(stack,button.getXPos(), button.getYPos(), 0, buttonV, 2, 2, 2, 2);
+            // Top Right Corner
+            RenderUtil.drawRectWithDefaultTexture(stack,button.getXPos() + (double)button.getWidth() - 2.0D, button.getYPos(), 198, buttonV, 2, 2, 2, 2);
+            // Bottom Right Corner
+            RenderUtil.drawRectWithDefaultTexture(stack,button.getXPos() + (double)button.getWidth() - 2.0D, button.getYPos() + (double)button.getHeight() - 2.0D, 198, (buttonV + 20 - 2), 2, 2, 2, 2);
+            // Bottom Left Corner
+            RenderUtil.drawRectWithDefaultTexture(stack,button.getXPos(), button.getYPos() + (double)button.getHeight() - 2.0D, 0, (buttonV + 20 - 2), 2, 2, 2, 2);
+
+            // Top
+            RenderUtil.drawRectWithDefaultTexture(stack,button.getXPos() + 2.0D, button.getYPos(), 2, buttonV, button.getWidth() - 4, 2, 1, 2);
+            // Right
+            RenderUtil.drawRectWithDefaultTexture(stack,button.getXPos() + (double)button.getWidth() - 2.0D, button.getYPos() + 2.0D, 198, (buttonV + 2), 2, button.getHeight() - 4, 2, 1);
+            // Bottom
+            RenderUtil.drawRectWithDefaultTexture(stack,button.getXPos() + 2.0D, button.getYPos() + (double)button.getHeight() - 2.0D, 3, (buttonV + 20 - 2), button.getWidth() - 4, 2, 1, 2);
+            // Left
+            RenderUtil.drawRectWithDefaultTexture(stack,button.getXPos(), button.getYPos() + 2.0D, 0, (buttonV + 2), 2, button.getHeight() - 4, 2, 1);
+            // Center
+            RenderUtil.drawRectWithDefaultTexture(stack,button.getXPos() + 2.0D, button.getYPos() + 2.0D, 2, (buttonV + 2), button.getWidth() - 4, button.getHeight() - 4, 1, 1);
+        }
+    }
+
+    public static class FlatStyle extends Style<Button> {
+
+        @Override
+        public void render(Button button, PoseStack stack) {
             if(button.isHovering()) {
-                RenderUtil.drawRectWithColour(stack,x, y, width, height, new Color(255, 255, 255, 60));
-                RenderUtil.drawRectWithColour(stack,x, y, width, 1, Color.WHITE);
-                RenderUtil.drawRectWithColour(stack,x, y + (double)height, width, 1, Color.WHITE);
-                RenderUtil.drawRectWithColour(stack,x, y, 1, height, Color.WHITE);
-                RenderUtil.drawRectWithColour(stack,x + (double)width - 1.0D, y, 1, height + 1, Color.WHITE);
+                RenderUtil.drawRectWithColour(stack,button.getXPos(), button.getYPos(), button.getWidth(), button.getHeight(), new Color(255, 255, 255, 60));
+                RenderUtil.drawRectWithColour(stack,button.getXPos(), button.getYPos(), button.getWidth(), 1, Color.WHITE);
+                RenderUtil.drawRectWithColour(stack,button.getXPos(), button.getYPos() + (double)button.getHeight(), button.getWidth(), 1, Color.WHITE);
+                RenderUtil.drawRectWithColour(stack,button.getXPos(), button.getYPos(), 1, button.getHeight(), Color.WHITE);
+                RenderUtil.drawRectWithColour(stack,button.getXPos() + (double)button.getWidth() - 1.0D, button.getYPos(), 1, button.getHeight() + 1, Color.WHITE);
             }
         }
     }

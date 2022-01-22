@@ -43,6 +43,7 @@ public class NoteApplication extends Application implements IOpenFile {
         this.updateFiles();
         this.fileItemList.setOnItemSelected((file, integer) -> {
             this.loadButton.setEnabled(integer != -1);
+            return true;
         });
         this.loadButton = new Button(88,2,"Load");
         loadButton.setTooltip(new Tooltip("Open selected file from list."));

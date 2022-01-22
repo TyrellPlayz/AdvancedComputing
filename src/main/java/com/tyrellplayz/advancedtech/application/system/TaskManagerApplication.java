@@ -38,7 +38,7 @@ public class TaskManagerApplication extends Application {
         Collections.sort(this.itemListApplications.getItems());
         this.itemListApplications.setOnItemSelected((item, itemIndex) -> {
             this.btnEndTask.setEnabled(item != null);
-
+            return true;
         });
         itemListApplications.setGetIcon(TaskManagerItem::getIcon);
 

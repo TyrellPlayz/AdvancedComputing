@@ -65,8 +65,8 @@ public class Window<T extends Content> implements IWindow<T> {
         this.computer = computer;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        this.screenTop = (double)screenTop;
-        this.screenLeft = (double)screenLeft;
+        this.screenTop = screenTop;
+        this.screenLeft = screenLeft;
 
         try {
             this.content.onLoad();
@@ -90,11 +90,10 @@ public class Window<T extends Content> implements IWindow<T> {
     public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         try {
             if (this.hasBorder()) {
-                Color borderColour = new Color(64, 64, 64);
-                RenderUtil.drawRectWithColour(stack,this.getX(), this.getY(), this.width, 10, borderColour);
-                RenderUtil.drawRectWithColour(stack,this.getX(), this.getY(), 2, this.height, borderColour);
-                RenderUtil.drawRectWithColour(stack,this.getX() + (double)(this.width - 1) - 1.0D, this.getY(), 2, this.height, borderColour);
-                RenderUtil.drawRectWithColour(stack,this.getX(), this.getY() + (double)(this.height - 1) - 1.0D, this.width, 2, borderColour);
+                RenderUtil.drawRectWithColour(stack,this.getX(), this.getY(), this.width, 10, MainTheme.WINDOW_BORDER_COLOUR);
+                RenderUtil.drawRectWithColour(stack,this.getX(), this.getY(), 2, this.height, MainTheme.WINDOW_BORDER_COLOUR);
+                RenderUtil.drawRectWithColour(stack,this.getX() + (double)(this.width - 1) - 1.0D, this.getY(), 2, this.height, MainTheme.WINDOW_BORDER_COLOUR);
+                RenderUtil.drawRectWithColour(stack,this.getX(), this.getY() + (double)(this.height - 1) - 1.0D, this.width, 2, MainTheme.WINDOW_BORDER_COLOUR);
                 if (this.hasIcon() && this.iconIsShown()) {
                     this.icon.render(stack, this.getX() + 2.0D, this.getY() + 1.0D, 7, 7);
                 }
