@@ -22,6 +22,9 @@ public abstract class Application extends LayeredContent {
 
     public Application() {}
 
+    /**
+     * Loads when the application is loaded / opened. Create layers and assign components here.
+     */
     @Override
     public void onLoad() {
         if(hasPreferences()) {

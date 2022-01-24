@@ -44,9 +44,7 @@ public class ApplicationManager extends SimplePreparableReloadListener<List<Appl
     @Override
     @NotNull
     protected List<ApplicationManager.ApplicationData> prepare(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
-        System.out.println("prepare");
         List<ApplicationManager.ApplicationData> applicationDataList = new ArrayList<>();
-        System.out.println(getApplicationTypes().size());
         TechCraft.LOGGER.debug("Loading applications {}", getApplicationTypes().size());
 
         for (ApplicationType<?> applicationType : getApplicationTypes()) {
@@ -66,7 +64,7 @@ public class ApplicationManager extends SimplePreparableReloadListener<List<Appl
                     manifest = JsonUtil.deserialize(GSON, manifestObject, ApplicationManifest.class);
                     ObfuscationReflectionHelper.setPrivateValue(ApplicationManifest.class, manifest, manifestObject, "jsonObject");
                     inputStream.close();
-                    //TODO: Validator
+                    // TODO: Validator
                     //if (Validator.isValidObject(manifest)) {
                     //    AdvancedTech.LOGGER.error("Could not load application {} as its manifest file is missing or malformed", registryName);
                     //    continue;
