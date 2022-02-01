@@ -27,6 +27,7 @@ public class FileExtension {
     public FileExtension(String fileExtension, Icon icon, ResourceLocation appId) {
         this(fileExtension, icon);
         this.appId = appId;
+        this.setDefaultApplicationClickListener();
     }
 
     public FileExtension(String fileExtension, Icon icon) {
@@ -38,7 +39,7 @@ public class FileExtension {
         }
     }
 
-    public FileExtension setDefaultClickListener() {
+    public FileExtension setDefaultApplicationClickListener() {
         this.clickListener = (system, file) -> {
             if (system instanceof ApplicationSystem) {
                 Application application = ((ApplicationSystem)system).openApplication(this.appId);
