@@ -1,33 +1,29 @@
 package com.tyrellplayz.tech_craft.api.content.application;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.tyrellplayz.tech_craft.api.icon.Icon;
-import com.tyrellplayz.tech_craft.util.validator.Ignored;
-import com.tyrellplayz.tech_craft.util.validator.Optional;
+import com.tyrellplayz.zlib.util.JsonSerializer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.Locale;
 import java.util.Objects;
 
 public class ApplicationManifest implements Comparable<ApplicationManifest> {
 
-    @Ignored
-    private JsonObject jsonObject;
     private ResourceLocation id;
     private String name;
     private String version;
     private String author;
-    @Optional
     private String website;
-    @Optional
     private StartPosition startPosition;
 
     private ApplicationManifest() {
         this.startPosition = StartPosition.CENTER;
-    }
-
-    public JsonObject getJsonObject() {
-        return this.jsonObject;
     }
 
     public ResourceLocation getId() {
@@ -58,6 +54,10 @@ public class ApplicationManifest implements Comparable<ApplicationManifest> {
         return startPosition;
     }
 
+    public Serializer getSerializer() {
+        return new Serializer();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,6 +74,44 @@ public class ApplicationManifest implements Comparable<ApplicationManifest> {
     @Override
     public int compareTo(ApplicationManifest applicationManifest) {
         return this.getName().compareTo(applicationManifest.getName());
+    }
+
+    public static class Serializer implements JsonSerializer<ApplicationManifest> {
+
+        @Override
+        public ApplicationManifest fromJson(ResourceLocation id, JsonObject jsonObject) throws JsonSyntaxException {
+            ApplicationManifest manifest = new ApplicationManifest();
+            manifest.id = id;
+            manifest.name = GsonHelper.getAsString(jsonObject,"name");
+            manifest.version = GsonHelper.getAsString(jsonObject,"version");
+            manifest.author = GsonHelper.getAsString(jsonObject,"author");
+            manifest.website = GsonHelper.getAsString(jsonObject,"website","");
+            manifest.startPosition = StartPosition.valueOf(GsonHelper.getAsString(jsonObject,"startPosition",StartPosition.CENTER.name().toLowerCase()).toUpperCase());
+            return manifest;
+        }
+
+        @Nullable
+        @Override
+        public ApplicationManifest fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
+            ApplicationManifest manifest = new ApplicationManifest();
+            manifest.id = id;
+            manifest.name = buffer.readUtf();
+            manifest.version = buffer.readUtf();
+            manifest.author = buffer.readUtf();
+            manifest.website = buffer.readUtf();
+            manifest.startPosition = buffer.readEnum(StartPosition.class);
+            return manifest;
+        }
+
+        @Override
+        public void toNetwork(FriendlyByteBuf buffer, ApplicationManifest applicationManifest) {
+            buffer.writeResourceLocation(applicationManifest.getId());
+            buffer.writeUtf(applicationManifest.getName());
+            buffer.writeUtf(applicationManifest.getVersion());
+            buffer.writeUtf(applicationManifest.getAuthor());
+            buffer.writeUtf(applicationManifest.getWebsite());
+            buffer.writeEnum(applicationManifest.getStartPosition());
+        }
     }
 
     public record AppIcon(ResourceLocation id) implements Icon {

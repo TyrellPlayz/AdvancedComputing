@@ -11,6 +11,7 @@ import com.tyrellplayz.zlib.util.RenderUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 public abstract class Application extends LayeredContent {
 
@@ -161,4 +162,11 @@ public abstract class Application extends LayeredContent {
         if (hasPreferences) preferences = new ApplicationPreferences(this);
         this.hasPreferences = hasPreferences;
     }
+
+    public static Application create(Class<? extends Application> applicationClass, ApplicationManifest manifest) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
+        Application application = applicationClass.getDeclaredConstructor().newInstance();
+        application.applicationManifest = manifest;
+        return application;
+    }
+
 }

@@ -1,8 +1,8 @@
 package com.tyrellplayz.tech_craft;
 
-import com.tyrellplayz.tech_craft.core.ApplicationType;
 import com.tyrellplayz.tech_craft.api.system.filesystem.FileExtension;
 import com.tyrellplayz.tech_craft.api.system.filesystem.FileExtensionManager;
+import com.tyrellplayz.tech_craft.core.ApplicationType;
 import com.tyrellplayz.tech_craft.core.TCBlockEntities;
 import com.tyrellplayz.tech_craft.core.TCBlocks;
 import com.tyrellplayz.tech_craft.core.TCItems;
@@ -13,10 +13,10 @@ import com.tyrellplayz.tech_craft.data.LootTableGen;
 import com.tyrellplayz.tech_craft.data.RecipeGen;
 import com.tyrellplayz.tech_craft.manager.ApplicationManager;
 import com.tyrellplayz.tech_craft.manager.TaskManager;
-import com.tyrellplayz.tech_craft.network.handshake.SUpdateApplicationDataHandshake;
+import com.tyrellplayz.tech_craft.network.handshake.ClientboundManifestHandshake;
 import com.tyrellplayz.tech_craft.network.play.CRequestMessage;
+import com.tyrellplayz.tech_craft.network.play.ClientboundUpdateManifestPacket;
 import com.tyrellplayz.tech_craft.network.play.SResponseMessage;
-import com.tyrellplayz.tech_craft.network.play.SUpdateApplicationDataMessage;
 import com.tyrellplayz.tech_craft.proxy.ClientProxy;
 import com.tyrellplayz.tech_craft.proxy.CommonProxy;
 import com.tyrellplayz.zlib.network.NetworkManager;
@@ -68,7 +68,7 @@ public class TechCraft {
         TCBlocks.REGISTER.register(eventBus);
         TCItems.REGISTER.register(eventBus);
         TCBlockEntities.REGISTER.register(eventBus);
-        MinecraftForge.EVENT_BUS.register(ApplicationType.class);
+        eventBus.register(ApplicationType.class);
 
         MinecraftForge.EVENT_BUS.register(this);
 
@@ -79,8 +79,8 @@ public class TechCraft {
 
         NETWORK.registerPlayMessage(CRequestMessage.class, NetworkDirection.PLAY_TO_SERVER);
         NETWORK.registerPlayMessage(SResponseMessage.class, NetworkDirection.PLAY_TO_CLIENT);
-        NETWORK.registerPlayMessage(SUpdateApplicationDataMessage.class, NetworkDirection.PLAY_TO_CLIENT);
-        NETWORK.registerHandshakeMessage(SUpdateApplicationDataHandshake.class);
+        NETWORK.registerPlayMessage(ClientboundUpdateManifestPacket.class, NetworkDirection.PLAY_TO_CLIENT);
+        NETWORK.registerHandshakeMessage(ClientboundManifestHandshake.class);
 
         TaskManager.get().registerTask(UpdateSystemDataTask.class);
 

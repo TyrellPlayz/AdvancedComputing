@@ -1,170 +1,137 @@
 package com.tyrellplayz.tech_craft.manager;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tyrellplayz.tech_craft.TechCraft;
 import com.tyrellplayz.tech_craft.api.content.application.Application;
 import com.tyrellplayz.tech_craft.api.content.application.ApplicationManifest;
 import com.tyrellplayz.tech_craft.core.ApplicationType;
+import com.tyrellplayz.tech_craft.network.handshake.ClientboundManifestHandshake;
+import com.tyrellplayz.tech_craft.network.play.ClientboundUpdateManifestPacket;
 import com.tyrellplayz.tech_craft.util.JsonDeserializers;
-import com.tyrellplayz.zlib.util.JsonUtil;
-import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryManager;
-import org.jetbrains.annotations.NotNull;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
-public class ApplicationManager extends SimplePreparableReloadListener<List<ApplicationManager.ApplicationData>> {
+public class ApplicationManager extends SimpleJsonResourceReloadListener {
 
-    protected static final Gson GSON = Util.make(() -> {
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(ResourceLocation.class, JsonDeserializers.RESOURCE_LOCATION);
-        return builder.create();
-    });
-    private ImmutableList<ApplicationManager.ApplicationData> applicationDataList = (new ImmutableList.Builder()).build();
+    private static final Gson GSON = (new GsonBuilder())
+            .setPrettyPrinting()
+            .disableHtmlEscaping()
+            .registerTypeAdapter(ResourceLocation.class, JsonDeserializers.RESOURCE_LOCATION)
+            .create();
+    private static final Logger LOGGER = LogManager.getLogger();
 
+    private List<ApplicationManifest> applicationManifests = ImmutableList.of();
+    private Map<ResourceLocation, ApplicationManifest> byName = ImmutableMap.of();
+    private boolean hasErrors;
+
+    public ApplicationManager() {
+        super(GSON, "apps");
+    }
 
     @Override
-    @NotNull
-    protected List<ApplicationManager.ApplicationData> prepare(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
-        List<ApplicationManager.ApplicationData> applicationDataList = new ArrayList<>();
-        TechCraft.LOGGER.debug("Loading applications {}", getApplicationTypes().size());
+    protected void apply(Map<ResourceLocation, JsonElement> jsonMap, ResourceManager manager, ProfilerFiller profiler) {
+        Collection<ApplicationType<?>> applications = getApplications();
+        TechCraft.LOGGER.debug("Loading applications {}", applications.size());
 
-        for (ApplicationType<?> applicationType : getApplicationTypes()) {
-            ResourceLocation registryName = applicationType.getRegistryName();
-            if (registryName != null) {
-                TechCraft.LOGGER.debug("Loading application {}", registryName.toString());
-                ResourceLocation manifestLocation = new ResourceLocation(registryName.getNamespace(), String.format("app/%s/manifest.json", registryName.getPath()));
+        this.hasErrors = false;
+        ImmutableList.Builder<ApplicationManifest> manifestList = ImmutableList.builder();
+        ImmutableMap.Builder<ResourceLocation, ApplicationManifest> byNameBuilder = ImmutableMap.builder();
 
-                ApplicationManifest manifest = null;
-                try {
-                    Resource resource = resourceManager.getResource(manifestLocation);
-
-                    InputStream inputStream = resource.getInputStream();
-                    JsonObject manifestObject = JsonUtil.loadJson(resource.getInputStream());
-                    manifestObject.addProperty("id", registryName.toString());
-
-                    manifest = JsonUtil.deserialize(GSON, manifestObject, ApplicationManifest.class);
-                    ObfuscationReflectionHelper.setPrivateValue(ApplicationManifest.class, manifest, manifestObject, "jsonObject");
-                    inputStream.close();
-                    // TODO: Validator
-                    //if (Validator.isValidObject(manifest)) {
-                    //    AdvancedTech.LOGGER.error("Could not load application {} as its manifest file is missing or malformed", registryName);
-                    //    continue;
-                    //}
-
-                } catch (IOException e) {
-                    TechCraft.LOGGER.error("Could not parse manifest file {}", registryName, e);
+        for (ApplicationType<?> registeredApplication : applications) {
+            TechCraft.LOGGER.debug("Loading application: {}", registeredApplication.getRegistryName());
+            try{
+                JsonElement element = jsonMap.get(registeredApplication.getRegistryName());
+                if(element == null) {
+                    throw new FileNotFoundException("No manifest file was found for application: "+registeredApplication.getRegistryName());
                 }
 
-                applicationDataList.add(new ApplicationData(manifest));
-                TechCraft.LOGGER.debug("Loaded application {}", registryName.toString());
+                JsonObject manifestJson = GsonHelper.convertToJsonObject(element,"top element");
+                ApplicationManifest.Serializer serializer = new ApplicationManifest.Serializer();
+                ApplicationManifest manifest = serializer.fromJson(registeredApplication.getRegistryName(),manifestJson);
+
+                manifestList.add(manifest);
+                byNameBuilder.put(registeredApplication.getRegistryName(),manifest);
+            }catch (Exception exception) {
+                LOGGER.error(exception);
+                this.hasErrors = true;
             }
         }
-        return applicationDataList;
+
+        applicationManifests = manifestList.build();
+        byName = byNameBuilder.build();
+        TechCraft.LOGGER.debug("Loaded {} applications successfully", applicationManifests.size());
     }
 
-    protected void apply(@NotNull List<ApplicationManager.ApplicationData> list, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
-        System.out.println("apply");
-        ImmutableList.Builder<ApplicationManager.ApplicationData> builder = new ImmutableList.Builder<>();
-        builder.addAll(list);
-        this.applicationDataList = builder.build();
-        TechCraft.LOGGER.debug("Loaded {} applications.", this.applicationDataList.size());
+    public boolean hadErrorsLoading() {
+        return this.hasErrors;
     }
 
     @Nullable
-    public Application createApplication(ResourceLocation id) {
-        if (!this.isApplicationLoaded(id)) {
-            return null;
-        } else {
+    public ApplicationManifest getApplicationManifestFor(ResourceLocation name) {
+        return byName.get(name);
+    }
+
+    public Collection<ApplicationManifest> getApplicationManifests() {
+        return applicationManifests;
+    }
+
+    public boolean isApplicationLoaded(ResourceLocation name) {
+        return this.getApplicationManifestFor(name) != null;
+    }
+
+    public Application createApplication(ResourceLocation name) {
+        if (isApplicationLoaded(name)) {
+            ApplicationType<?> applicationType = getApplicationRegistry().getValue(name);
+            Class<? extends Application> applicationClass = applicationType.getApplicationClass();
             try {
-                IForgeRegistry<ApplicationType<?>> types = RegistryManager.ACTIVE.getRegistry(ApplicationType.class);
-                ApplicationType<?> type = types.getValue(id);
-
-                assert type != null;
-
-                Class<? extends Application> applicationClass = type.getApplicationClass();
-                Application application = applicationClass.getDeclaredConstructor().newInstance();
-                ApplicationManager.ApplicationData data = this.getApplication(id);
-                ObfuscationReflectionHelper.setPrivateValue(Application.class, application, data.getManifest(), "applicationManifest");
-                return application;
-            } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException var7) {
-                TechCraft.LOGGER.error("Could not create application " + id, var7);
-                return null;
+                return Application.create(applicationClass,getApplicationManifestFor(name));
+            } catch (NoSuchMethodException e) {
+                LOGGER.error(String.format("%s does not have an empty parameter constructor",applicationClass.getName()),e);
+            } catch (IllegalAccessException e) {
+                LOGGER.error(String.format("The constructor of %s cannot be accessed. Ensure it is public",applicationClass.getName()),e);
+            } catch (InstantiationException | InvocationTargetException e) {
+                e.printStackTrace();
             }
         }
+        return null;
     }
 
-    @Nullable
-    public ApplicationManager.ApplicationData getApplication(ResourceLocation id) {
-        return this.applicationDataList.stream().filter((applicationData) -> applicationData.manifest.getId().equals(id)).findFirst().orElse(null);
-    }
-
-    public ImmutableList<ApplicationManager.ApplicationData> getApplications() {
-        return this.applicationDataList;
-    }
-
-    public Collection<ResourceLocation> getRegisteredApplications() {
-        List<ResourceLocation> registeredApplications = new ArrayList<>();
-        getApplicationTypes().forEach((applicationType) -> {
-            registeredApplications.add(applicationType.getRegistryName());
-        });
-        return registeredApplications;
-    }
-
-    public boolean isApplicationLoaded(ResourceLocation id) {
-        return this.getApplication(id) != null;
-    }
-
-    public boolean isApplicationRegistered(ResourceLocation id) {
-        return this.getRegisteredApplications().contains(id);
-    }
-
-    private static Collection<ApplicationType<?>> getApplicationTypes() {
+    private static Collection<ApplicationType<?>> getApplications() {
         IForgeRegistry<ApplicationType<?>> types = RegistryManager.ACTIVE.getRegistry(ApplicationType.class);
-        if(types == null) {
-            return new ArrayList<>();
-        }
+        if(types == null) return new ArrayList<>();
         return types.getValues();
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void handleUpdateMessage(ApplicationManager.IApplicationProvider message) {
-        this.applicationDataList = message.getApplicationsData();
+    private static IForgeRegistry<ApplicationType<?>> getApplicationRegistry() {
+        return RegistryManager.ACTIVE.getRegistry(ApplicationType.class);
     }
 
-    public interface IApplicationProvider {
-        ImmutableList<ApplicationManager.ApplicationData> getApplicationsData();
+    public static void handleUpdateManifestHandshake(ClientboundManifestHandshake packet) {
+        TechCraft.getApplicationManager().applicationManifests.addAll(packet.getApplicationManifests());
     }
 
-    public static class ApplicationData {
-        private final ApplicationManifest manifest;
-
-        public ApplicationData(ApplicationManifest manifest) {
-            this.manifest = manifest;
-        }
-
-        public ApplicationManifest getManifest() {
-            return this.manifest;
-        }
-
+    public static void handleUpdateManifestPacket(ClientboundUpdateManifestPacket packet) {
+        TechCraft.getApplicationManager().applicationManifests.addAll(packet.getApplicationManifests());
     }
 
 }

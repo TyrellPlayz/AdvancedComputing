@@ -87,13 +87,11 @@ public class ComputerBlockEntity extends SyncBlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        TechCraft.LOGGER.info("load "+tag.getCompound("SystemData"));
         setSystemData(tag.getCompound("SystemData"));
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag) {
-        TechCraft.LOGGER.info("saveAdditional "+getSystemData());
         tag.put("SystemData",getSystemData());
     }
 

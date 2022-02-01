@@ -27,12 +27,9 @@ public class UpdateSystemDataTask extends Task {
     public void prepareRequest(CompoundTag nbt) {
         nbt.putLong("ComputerPos", this.computerPos.asLong());
         nbt.put("SystemData", this.systemData);
-        TechCraft.LOGGER.info("prepareRequest "+nbt);
     }
 
     public void processRequest(CompoundTag nbt, Level level, Player player) {
-        TechCraft.LOGGER.info("processRequest "+nbt);
-
         BlockPos computerPos = BlockPos.of(nbt.getLong("ComputerPos"));
         BlockEntity tile = level.getBlockEntity(computerPos);
         if (tile instanceof ComputerBlockEntity computerTile) {

@@ -14,7 +14,7 @@ import com.tyrellplayz.tech_craft.api.system.IWindow;
 import com.tyrellplayz.tech_craft.api.system.SystemSettings;
 import com.tyrellplayz.tech_craft.api.system.filesystem.FileSystem;
 import com.tyrellplayz.tech_craft.blockentity.ComputerBlockEntity;
-import com.tyrellplayz.tech_craft.manager.ApplicationManager;
+import com.tyrellplayz.tech_craft.manager.OldApplicationManager;
 import com.tyrellplayz.tech_craft.manager.TaskManager;
 import com.tyrellplayz.zlib.client.gui.screen.GuiScreen;
 import com.tyrellplayz.zlib.util.RenderUtil;
@@ -195,17 +195,17 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
         if (!TechCraft.getApplicationManager().isApplicationLoaded(id)) {
             return null;
         } else {
-            ApplicationManifest applicationManifest = TechCraft.getApplicationManager().getApplication(id).getManifest();
+            ApplicationManifest applicationManifest = TechCraft.getApplicationManager().getApplicationManifestFor(id);
             return !this.isApplicationOpen(id) ? null : (Application)((IWindow)this.idWindowMap.get(applicationManifest.getId())).getContent();
         }
     }
 
     public Collection<ApplicationManifest> getInstalledApplications() {
-        return TechCraft.getApplicationManager().getApplications().stream().map(ApplicationManager.ApplicationData::getManifest).sorted().collect(Collectors.toList());
+        return TechCraft.getApplicationManager().getApplicationManifests().stream().sorted().collect(Collectors.toList());
     }
 
     public Application[] getRunningApplications() {
-        List<Application> applications = new ArrayList();
+        List<Application> applications = new ArrayList<>();
 
         for (IWindow<? extends Content> window : this.windows) {
             if (window.getContent() instanceof Application) {
@@ -225,7 +225,7 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
             if (application == null) {
                 return null;
             } else {
-                IWindow<Application> newWindow = new Window(application);
+                IWindow<Application> newWindow = new Window<>(application);
                 this.openWindow(newWindow);
                 return application;
             }
@@ -236,7 +236,7 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
         if (!TechCraft.getApplicationManager().isApplicationLoaded(id)) {
             return false;
         } else {
-            ApplicationManifest applicationManifest = TechCraft.getApplicationManager().getApplication(id).getManifest();
+            ApplicationManifest applicationManifest = TechCraft.getApplicationManager().getApplicationManifestFor(id);
             return applicationManifest != null && this.idWindowMap.containsKey(applicationManifest.getId());
         }
     }
@@ -251,7 +251,7 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
 
     public void closeApplication(ResourceLocation id) {
         if (TechCraft.getApplicationManager().isApplicationLoaded(id)) {
-            ApplicationManifest applicationManifest = TechCraft.getApplicationManager().getApplication(id).getManifest();
+            ApplicationManifest applicationManifest = TechCraft.getApplicationManager().getApplicationManifestFor(id);
             if (this.isApplicationOpen(id)) {
                 IWindow<? extends Content> window = this.idWindowMap.remove(applicationManifest.getId());
                 this.closeWindow(window);
