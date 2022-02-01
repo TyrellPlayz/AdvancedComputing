@@ -12,7 +12,6 @@ import com.tyrellplayz.tech_craft.api.content.application.ApplicationManifest;
 import com.tyrellplayz.tech_craft.core.ApplicationType;
 import com.tyrellplayz.tech_craft.network.handshake.ClientboundManifestHandshake;
 import com.tyrellplayz.tech_craft.network.play.ClientboundUpdateManifestPacket;
-import com.tyrellplayz.tech_craft.util.JsonDeserializers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -36,7 +35,6 @@ public class ApplicationManager extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = (new GsonBuilder())
             .setPrettyPrinting()
             .disableHtmlEscaping()
-            .registerTypeAdapter(ResourceLocation.class, JsonDeserializers.RESOURCE_LOCATION)
             .create();
     private static final Logger LOGGER = LogManager.getLogger();
 

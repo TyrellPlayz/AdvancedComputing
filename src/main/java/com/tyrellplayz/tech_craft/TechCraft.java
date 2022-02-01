@@ -1,7 +1,7 @@
 package com.tyrellplayz.tech_craft;
 
 import com.tyrellplayz.tech_craft.api.system.filesystem.FileExtension;
-import com.tyrellplayz.tech_craft.api.system.filesystem.FileExtensionManager;
+import com.tyrellplayz.tech_craft.manager.FileExtensionManager;
 import com.tyrellplayz.tech_craft.core.ApplicationType;
 import com.tyrellplayz.tech_craft.core.TCBlockEntities;
 import com.tyrellplayz.tech_craft.core.TCBlocks;

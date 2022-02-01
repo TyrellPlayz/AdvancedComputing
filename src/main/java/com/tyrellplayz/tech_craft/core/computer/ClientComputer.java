@@ -14,7 +14,6 @@ import com.tyrellplayz.tech_craft.api.system.IWindow;
 import com.tyrellplayz.tech_craft.api.system.SystemSettings;
 import com.tyrellplayz.tech_craft.api.system.filesystem.FileSystem;
 import com.tyrellplayz.tech_craft.blockentity.ComputerBlockEntity;
-import com.tyrellplayz.tech_craft.manager.OldApplicationManager;
 import com.tyrellplayz.tech_craft.manager.TaskManager;
 import com.tyrellplayz.zlib.client.gui.screen.GuiScreen;
 import com.tyrellplayz.zlib.util.RenderUtil;

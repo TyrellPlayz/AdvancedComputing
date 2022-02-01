@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,on=false": {
+      "model": "tech_craft:block/computer",
+      "y": 90
+    },
+    "facing=east,on=true": {
+      "model": "tech_craft:block/computer_on",
+      "y": 90
+    },
+    "facing=north,on=false": {
+      "model": "tech_craft:block/computer"
+    },
+    "facing=north,on=true": {
+      "model": "tech_craft:block/computer_on"
+    },
+    "facing=south,on=false": {
+      "model": "tech_craft:block/computer",
+      "y": 180
+    },
+    "facing=south,on=true": {
+      "model": "tech_craft:block/computer_on",
+      "y": 180
+    },
+    "facing=west,on=false": {
+      "model": "tech_craft:block/computer",
+      "y": 270
+    },
+    "facing=west,on=true": {
+      "model": "tech_craft:block/computer_on",
+      "y": 270
+    }
+  }
+}

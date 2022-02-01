@@ -24,7 +24,6 @@ public class TaskBar {
     private final List<TaskBar.Item> items;
     private double xPos;
     private double yPos;
-    private final Color barColour = new Color(64, 64, 64);
     private final Color itemHover = (new Color(64, 64, 64, 200)).brighter();
     private final Color itemFocused = new Color(64, 64, 64, 200);
     private final Color itemNotFocused = new Color(64, 64, 64, 200);
@@ -47,7 +46,7 @@ public class TaskBar {
     }
 
     public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        RenderUtil.drawRectWithColour(stack, (float)this.xPos, (float)this.yPos, this.system.SCREEN_WIDTH, 16, new Color(64, 64, 64));
+        RenderUtil.drawRectWithColour(stack, (float)this.xPos, (float)this.yPos, this.system.SCREEN_WIDTH, 16, MainTheme.TASK_BAR_COLOUR);
         this.drawTime(stack,mouseX,mouseY);
         this.drawItems(stack,mouseX, mouseY);
     }
@@ -92,9 +91,10 @@ public class TaskBar {
             if (item.getItemType() == TaskBar.ItemType.APPLICATION) {
                 ResourceLocation id = new ResourceLocation(item.getId());
                 if (this.system.isApplicationFocused(id)) {
-                    RenderUtil.drawRectWithColour(stack,itemX, itemY - 1.0D, 14, 16, new Color(64, 64, 64));
-                } else if (this.system.isApplicationOpen(id)) {
-                    RenderUtil.drawRectWithColour(stack,itemX + 1.0D, itemY - 1.0D + 15.0D, 12, 1, (new Color(64, 64, 64)).brighter());
+                    drawItemFocusedHighlight(stack,itemX,itemY);
+                }
+                if(this.system.isApplicationOpen(id)) {
+                    drawItemOpenedHighlight(stack,itemX,itemY);
                 }
             }
 
@@ -107,6 +107,14 @@ public class TaskBar {
         RenderUtil.drawRectWithColour(stack,x - 1.0D, y - 1.0D, 16, 16, new Color(255, 255, 255, 50));
     }
 
+    private void drawItemOpenedHighlight(PoseStack stack, double x, double y) {
+        RenderUtil.drawRectWithColour(stack,x, y + 14.0D, 14, 1, MainTheme.TASK_BAR_COLOUR.brighter().brighter());
+    }
+
+    private void drawItemFocusedHighlight(PoseStack stack, double x, double y) {
+        RenderUtil.drawRectWithColour(stack,x - 1.0D, y - 1.0D, 16, 16, MainTheme.setAlpha(MainTheme.TASK_BAR_COLOUR,200).brighter());
+    }
+
     public boolean mouseClicked(double mouseX, double mouseY, int code) {
         for(int i = 0; i < this.items.size(); ++i) {
             TaskBar.Item item = this.items.get(i);
@@ -116,7 +124,6 @@ public class TaskBar {
                 item.onClick(code);
             }
         }
-
         return false;
     }
 

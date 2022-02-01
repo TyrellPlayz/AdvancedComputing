@@ -1,7 +1,6 @@
 package com.tyrellplayz.tech_craft.manager;
 
 import com.tyrellplayz.tech_craft.TechCraft;
-import com.tyrellplayz.tech_craft.api.manager.ITaskManger;
 import com.tyrellplayz.tech_craft.api.task.Task;
 import com.tyrellplayz.tech_craft.network.play.CRequestMessage;
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +13,7 @@ import java.util.Map;
 /**
  * Created by MrCrayfish
  */
-public class TaskManager implements ITaskManger {
+public class TaskManager {
 
     public static final Logger LOGGER = LogManager.getLogger("TaskManager");
     private static TaskManager instance = null;

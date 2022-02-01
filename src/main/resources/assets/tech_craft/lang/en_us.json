@@ -1,6 +1,7 @@
 {
+  "block.tech_craft.computer": "Computer",
 
-  "advanced_technology.info_help": "Press SHIFT for more info.",
+  "tech_craft.info_help": "Press SHIFT for more info.",
 
-  "itemGroup.advanced_tech": "Advanced Tech"
+  "itemGroup.tech_craft": "Tech Craft"
 }

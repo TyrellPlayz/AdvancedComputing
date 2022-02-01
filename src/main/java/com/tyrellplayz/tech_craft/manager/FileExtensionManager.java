@@ -1,12 +1,12 @@
-package com.tyrellplayz.tech_craft.api.system.filesystem;
+package com.tyrellplayz.tech_craft.manager;
 
-import com.tyrellplayz.tech_craft.api.manager.IFileExtensionManager;
+import com.tyrellplayz.tech_craft.api.system.filesystem.FileExtension;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FileExtensionManager implements IFileExtensionManager {
+public class FileExtensionManager {
 
     private static FileExtensionManager instance;
     private Map<String, FileExtension> fileExtensionsMap = new HashMap();
@@ -30,12 +30,10 @@ public class FileExtensionManager implements IFileExtensionManager {
         }
     }
 
-    @Override
     public FileExtension getExtension(String extension) {
         return this.fileExtensionsMap.get(extension);
     }
 
-    @Override
     public Collection<FileExtension> getFileExtensions() {
         return this.fileExtensionsMap.values();
     }

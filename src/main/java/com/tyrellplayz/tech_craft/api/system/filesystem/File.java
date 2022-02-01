@@ -2,6 +2,7 @@ package com.tyrellplayz.tech_craft.api.system.filesystem;
 
 import com.tyrellplayz.tech_craft.api.icon.Icon;
 import com.tyrellplayz.tech_craft.api.icon.Icons;
+import com.tyrellplayz.tech_craft.manager.FileExtensionManager;
 import joptsimple.internal.Strings;
 import net.minecraft.nbt.CompoundTag;
 
