@@ -19,6 +19,8 @@ import com.tyrellplayz.tech_craft.network.play.ClientboundUpdateManifestPacket;
 import com.tyrellplayz.tech_craft.network.play.SResponseMessage;
 import com.tyrellplayz.tech_craft.proxy.ClientProxy;
 import com.tyrellplayz.tech_craft.proxy.CommonProxy;
+import com.tyrellplayz.zlib.ZLib;
+import com.tyrellplayz.zlib.ZMod;
 import com.tyrellplayz.zlib.network.NetworkManager;
 import com.tyrellplayz.zlib.proxy.ModProxy;
 import net.minecraft.data.DataGenerator;
@@ -40,12 +42,13 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(AdvancedComputing.MOD_ID)
-public class AdvancedComputing {
+public class AdvancedComputing extends ZMod {
 
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "advanced_computing";
@@ -125,12 +128,12 @@ public class AdvancedComputing {
     }
 
     @SubscribeEvent
-    public void registerRegistries(RegistryEvent.NewRegistry event) {
-        createRegistry(new ResourceLocation(MOD_ID,"application"), ApplicationType.class);
+    public void registerRegistries(NewRegistryEvent event) {
+        createRegistry(event,new ResourceLocation(MOD_ID,"application"), ApplicationType.class);
     }
 
-    public <T extends IForgeRegistryEntry<T>> void createRegistry(ResourceLocation key, Class<T> type) {
-        new RegistryBuilder<T>().setName(key).setType(type).setDefaultKey(key).create();
+    public <T extends IForgeRegistryEntry<T>> void createRegistry(NewRegistryEvent event, ResourceLocation key, Class<T> type) {
+        event.create(new RegistryBuilder<T>().setName(key).setType(type).setDefaultKey(key));
     }
 
     public static ApplicationManager getApplicationManager() {

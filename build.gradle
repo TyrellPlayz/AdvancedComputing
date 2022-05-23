@@ -91,7 +91,7 @@ dependencies {
     // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}")
 
-    implementation fg.deobf("com.tyrellplayz.zlib:zlib-1.18.1:1.0.1")
+    implementation fg.deobf("com.tyrellplayz.zlib:zlib-${project.minecraft_version}:${project.zlib_version}")
 }
 
 def replaceResources = tasks.register("replaceResources", Copy) {

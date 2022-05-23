@@ -115,13 +115,13 @@ public class ApplicationManager extends SimpleJsonResourceReloadListener {
     }
 
     private static Collection<ApplicationType<?>> getApplications() {
-        IForgeRegistry<ApplicationType<?>> types = RegistryManager.ACTIVE.getRegistry(ApplicationType.class);
+        IForgeRegistry<ApplicationType<?>> types = RegistryManager.ACTIVE.getRegistry(new ResourceLocation(AdvancedComputing.MOD_ID,"application"));
         if(types == null) return new ArrayList<>();
         return types.getValues();
     }
 
     private static IForgeRegistry<ApplicationType<?>> getApplicationRegistry() {
-        return RegistryManager.ACTIVE.getRegistry(ApplicationType.class);
+        return RegistryManager.ACTIVE.getRegistry(new ResourceLocation(AdvancedComputing.MOD_ID,"application"));
     }
 
     public static void handleUpdateManifestHandshake(ClientboundManifestHandshake packet) {
