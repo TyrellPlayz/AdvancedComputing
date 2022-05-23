@@ -1,6 +1,6 @@
 package com.tyrellplayz.tech_craft.network.play;
 
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import com.tyrellplayz.tech_craft.api.content.application.ApplicationManifest;
 import com.tyrellplayz.tech_craft.manager.ApplicationManager;
 import com.tyrellplayz.zlib.network.message.PlayMessage;
@@ -26,7 +26,7 @@ public class ClientboundUpdateManifestPacket extends PlayMessage<ClientboundUpda
 
     @Override
     public void writePacket(ClientboundUpdateManifestPacket message, FriendlyByteBuf buf) {
-        message.applicationManifests = TechCraft.getApplicationManager().getApplicationManifests();
+        message.applicationManifests = AdvancedComputing.getApplicationManager().getApplicationManifests();
         buf.writeCollection(applicationManifests,(buf1, manifest) -> manifest.getSerializer().toNetwork(buf,manifest));
     }
 

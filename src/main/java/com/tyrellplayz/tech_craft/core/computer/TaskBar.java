@@ -1,6 +1,8 @@
 package com.tyrellplayz.tech_craft.core.computer;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.tyrellplayz.tech_craft.api.content.RightClickMenu;
 import com.tyrellplayz.tech_craft.api.content.application.ApplicationManifest;
 import com.tyrellplayz.tech_craft.api.icon.Icon;
 import com.tyrellplayz.tech_craft.api.icon.Icons;
@@ -9,12 +11,15 @@ import com.tyrellplayz.zlib.util.ClickListener;
 import com.tyrellplayz.zlib.util.RenderUtil;
 import com.tyrellplayz.zlib.util.Util;
 import net.minecraft.resources.ResourceLocation;
+import org.lwjgl.glfw.GLFW;
 
+import javax.swing.plaf.ListUI;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class TaskBar {
 
@@ -31,12 +36,10 @@ public class TaskBar {
     public TaskBar(ClientComputer system) {
         this.system = system;
         this.items = new ArrayList<>();
-        this.items.add((new TaskBar.Item("start_menu", Icons.HOME, TaskBar.ItemType.START_MENU)).setClickListener((mouseButton) -> {
-            system.openStartMenu();
-        }));
+        this.items.add(new StartMenuItem(system));
 
         for (ApplicationManifest applicationManifest : system.getInstalledApplications()) {
-            this.items.add(new Item(applicationManifest, system));
+            this.items.add(new ApplicationItem(applicationManifest, this));
         }
     }
 
@@ -88,7 +91,7 @@ public class TaskBar {
                 this.drawItemHighlight(stack,itemX, itemY);
             }
 
-            if (item.getItemType() == TaskBar.ItemType.APPLICATION) {
+            if (item instanceof ApplicationItem) {
                 ResourceLocation id = new ResourceLocation(item.getId());
                 if (this.system.isApplicationFocused(id)) {
                     drawItemFocusedHighlight(stack,itemX,itemY);
@@ -115,6 +118,11 @@ public class TaskBar {
         RenderUtil.drawRectWithColour(stack,x - 1.0D, y - 1.0D, 16, 16, MainTheme.setAlpha(MainTheme.TASK_BAR_COLOUR,200).brighter());
     }
 
+    public int getItemLeft(Item item) {
+        int index = items.indexOf(item);
+        return index * 16 + 1;
+    }
+
     public boolean mouseClicked(double mouseX, double mouseY, int code) {
         for(int i = 0; i < this.items.size(); ++i) {
             TaskBar.Item item = this.items.get(i);
@@ -127,27 +135,38 @@ public class TaskBar {
         return false;
     }
 
-    public enum ItemType {
-        START_MENU, SYSTEM, APPLICATION
+    public static class StartMenuItem extends Item {
+
+        public StartMenuItem(ClientComputer system) {
+            super("start_menu", Icons.HOME);
+            this.clickListener = i -> system.openStartMenu();
+        }
+    }
+
+    public static class ApplicationItem extends Item {
+
+        private final ApplicationManifest manifest;
+
+        public ApplicationItem(ApplicationManifest manifest, TaskBar taskBar) {
+            super(manifest.getId().toString(), manifest.getIcon());
+            this.manifest = manifest;
+            this.clickListener = (mouseButton) -> {
+                if(mouseButton == GLFW.GLFW_MOUSE_BUTTON_1) {
+                    // Left
+                    taskBar.system.openApplication(manifest.getId());
+                }
+            };
+        }
     }
 
     public static class Item {
-        private final String id;
-        private final Icon icon;
-        private final TaskBar.ItemType itemType;
-        private ClickListener clickListener;
+        protected final String id;
+        protected final Icon icon;
+        protected ClickListener clickListener;
 
-        public Item(String id, Icon icon, TaskBar.ItemType itemType) {
+        public Item(String id, Icon icon) {
             this.id = id;
             this.icon = icon;
-            this.itemType = itemType;
-        }
-
-        public Item(ApplicationManifest applicationManifest, ApplicationSystem system) {
-            this(applicationManifest.getId().toString(), applicationManifest.getIcon(), TaskBar.ItemType.APPLICATION);
-            this.clickListener = (mouseButton) -> {
-                system.openApplication(applicationManifest.getId());
-            };
         }
 
         public String getId() {
@@ -156,10 +175,6 @@ public class TaskBar {
 
         public Icon getIcon() {
             return this.icon;
-        }
-
-        public TaskBar.ItemType getItemType() {
-            return this.itemType;
         }
 
         public TaskBar.Item setClickListener(ClickListener clickListener) {
@@ -171,7 +186,19 @@ public class TaskBar {
             if (this.clickListener != null) {
                 this.clickListener.onClick(code);
             }
+        }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Item item = (Item) o;
+            return id.equals(item.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id);
         }
     }
 

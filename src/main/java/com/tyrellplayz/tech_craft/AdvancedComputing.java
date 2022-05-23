@@ -44,11 +44,11 @@ import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(TechCraft.MOD_ID)
-public class TechCraft {
+@Mod(AdvancedComputing.MOD_ID)
+public class AdvancedComputing {
 
     public static final Logger LOGGER = LogManager.getLogger();
-    public static final String MOD_ID = "tech_craft";
+    public static final String MOD_ID = "advanced_computing";
 
     public static ModProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
@@ -59,7 +59,7 @@ public class TechCraft {
     public static final NetworkManager NETWORK = new NetworkManager(MOD_ID,"1");
     private static ApplicationManager applicationManager;
 
-    public TechCraft() {
+    public AdvancedComputing() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         eventBus.addListener(this::gatherData);
@@ -121,7 +121,7 @@ public class TechCraft {
     public void addReloadListenerEvent(AddReloadListenerEvent event) {
         ApplicationManager applicationManager = new ApplicationManager();
         event.addListener(applicationManager);
-        TechCraft.applicationManager = applicationManager;
+        AdvancedComputing.applicationManager = applicationManager;
     }
 
     @SubscribeEvent

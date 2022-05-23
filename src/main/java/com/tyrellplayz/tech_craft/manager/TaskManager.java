@@ -1,6 +1,6 @@
 package com.tyrellplayz.tech_craft.manager;
 
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import com.tyrellplayz.tech_craft.api.task.Task;
 import com.tyrellplayz.tech_craft.network.play.CRequestMessage;
 import org.apache.logging.log4j.LogManager;
@@ -50,7 +50,7 @@ public class TaskManager {
         } else {
             int requestId = this.currentId++;
             this.requests.put(requestId, task);
-            TechCraft.NETWORK.sendToServer(new CRequestMessage(requestId, task));
+            AdvancedComputing.NETWORK.sendToServer(new CRequestMessage(requestId, task));
         }
     }
 

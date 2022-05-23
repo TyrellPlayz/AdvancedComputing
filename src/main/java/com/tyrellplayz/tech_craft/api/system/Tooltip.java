@@ -53,10 +53,9 @@ public class Tooltip implements IRenderable {
         RenderUtil.drawRectWithColour(stack, this.xPos, this.yPos, this.width, this.height, Color.BLACK);
         RenderUtil.drawRectWithColour(stack,this.xPos + 1.0D, this.yPos + 1.0D, this.width - 2, this.height - 2, this.bgColour);
         double textY = this.yPos + 2.0D;
-        for (int i = 0; i < text.length; i++) {
-            String s = this.text[i];
-            RenderUtil.drawText(stack,s,this.xPos + 2.0D, textY, Color.WHITE);
-            textY += (9+2);
+        for (String s : text) {
+            RenderUtil.drawText(stack, s, this.xPos + 2.0D, textY, Color.WHITE);
+            textY += (9 + 2);
         }
     }
 

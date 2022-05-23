@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import com.tyrellplayz.tech_craft.api.content.application.Application;
 import com.tyrellplayz.tech_craft.api.content.application.ApplicationManifest;
 import com.tyrellplayz.tech_craft.core.ApplicationType;
@@ -49,14 +49,14 @@ public class ApplicationManager extends SimpleJsonResourceReloadListener {
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsonMap, ResourceManager manager, ProfilerFiller profiler) {
         Collection<ApplicationType<?>> applications = getApplications();
-        TechCraft.LOGGER.debug("Loading applications {}", applications.size());
+        AdvancedComputing.LOGGER.debug("Loading applications {}", applications.size());
 
         this.hasErrors = false;
         ImmutableList.Builder<ApplicationManifest> manifestList = ImmutableList.builder();
         ImmutableMap.Builder<ResourceLocation, ApplicationManifest> byNameBuilder = ImmutableMap.builder();
 
         for (ApplicationType<?> registeredApplication : applications) {
-            TechCraft.LOGGER.debug("Loading application: {}", registeredApplication.getRegistryName());
+            AdvancedComputing.LOGGER.debug("Loading application: {}", registeredApplication.getRegistryName());
             try{
                 JsonElement element = jsonMap.get(registeredApplication.getRegistryName());
                 if(element == null) {
@@ -77,7 +77,7 @@ public class ApplicationManager extends SimpleJsonResourceReloadListener {
 
         applicationManifests = manifestList.build();
         byName = byNameBuilder.build();
-        TechCraft.LOGGER.debug("Loaded {} applications successfully", applicationManifests.size());
+        AdvancedComputing.LOGGER.debug("Loaded {} applications successfully", applicationManifests.size());
     }
 
     public boolean hadErrorsLoading() {
@@ -125,11 +125,11 @@ public class ApplicationManager extends SimpleJsonResourceReloadListener {
     }
 
     public static void handleUpdateManifestHandshake(ClientboundManifestHandshake packet) {
-        TechCraft.getApplicationManager().applicationManifests.addAll(packet.getApplicationManifests());
+        AdvancedComputing.getApplicationManager().applicationManifests.addAll(packet.getApplicationManifests());
     }
 
     public static void handleUpdateManifestPacket(ClientboundUpdateManifestPacket packet) {
-        TechCraft.getApplicationManager().applicationManifests.addAll(packet.getApplicationManifests());
+        AdvancedComputing.getApplicationManager().applicationManifests.addAll(packet.getApplicationManifests());
     }
 
 }

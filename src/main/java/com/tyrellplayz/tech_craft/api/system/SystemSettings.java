@@ -1,6 +1,6 @@
 package com.tyrellplayz.tech_craft.api.system;
 
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
@@ -17,7 +17,7 @@ public class SystemSettings {
     public SystemSettings(System system) {
         this.system = system;
 
-        this.backgroundLocation = new ResourceLocation(TechCraft.MOD_ID,"textures/gui/background/hill.png");
+        this.backgroundLocation = new ResourceLocation(AdvancedComputing.MOD_ID,"textures/gui/background/hill.png");
         this.realTime = true;
         this.amPmTime = true;
     }

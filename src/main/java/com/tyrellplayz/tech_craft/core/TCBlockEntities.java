@@ -1,6 +1,6 @@
 package com.tyrellplayz.tech_craft.core;
 
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import com.tyrellplayz.tech_craft.blockentity.ComputerBlockEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 public class TCBlockEntities {
 
-    public static final DeferredRegister<BlockEntityType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, TechCraft.MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, AdvancedComputing.MOD_ID);
 
     public static final RegistryObject<BlockEntityType<ComputerBlockEntity>> COMPUTER = register("computer", ComputerBlockEntity::new, () -> new Block[]{TCBlocks.COMPUTER.get()});
 

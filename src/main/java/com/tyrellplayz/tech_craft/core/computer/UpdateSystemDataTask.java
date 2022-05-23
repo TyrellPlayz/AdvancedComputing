@@ -1,6 +1,5 @@
 package com.tyrellplayz.tech_craft.core.computer;
 
-import com.tyrellplayz.tech_craft.TechCraft;
 import com.tyrellplayz.tech_craft.api.task.Task;
 import com.tyrellplayz.tech_craft.blockentity.ComputerBlockEntity;
 import net.minecraft.core.BlockPos;

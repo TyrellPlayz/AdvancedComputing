@@ -1,6 +1,6 @@
 package com.tyrellplayz.tech_craft.data;
 
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -11,7 +11,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 public class ItemModelGen extends ItemModelProvider {
 
     public ItemModelGen(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, TechCraft.MOD_ID, existingFileHelper);
+        super(generator, AdvancedComputing.MOD_ID, existingFileHelper);
     }
 
     @Override

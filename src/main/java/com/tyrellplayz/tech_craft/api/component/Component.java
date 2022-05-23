@@ -1,7 +1,7 @@
 package com.tyrellplayz.tech_craft.api.component;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import com.tyrellplayz.tech_craft.api.content.Layer;
 import com.tyrellplayz.tech_craft.api.system.Tooltip;
 import com.tyrellplayz.tech_craft.api.util.Animation;
@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public abstract class Component implements IScreenEventListener {
 
-    protected static final ResourceLocation COMPONENT_TEXTURES = new ResourceLocation(TechCraft.MOD_ID,"textures/gui/components.png");
+    protected static final ResourceLocation COMPONENT_TEXTURES = new ResourceLocation(AdvancedComputing.MOD_ID,"textures/gui/components.png");
 
     // X and Y position of the component.
     protected double xPos, yPos;

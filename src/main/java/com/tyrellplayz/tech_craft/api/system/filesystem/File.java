@@ -48,6 +48,10 @@ public class File implements FileSystemItem{
         return !Strings.isNullOrEmpty(this.fileExtension) && FileExtensionManager.get().getExtension(this.fileExtension) != null ? FileExtensionManager.get().getExtension(this.fileExtension) : new FileExtension(this.fileExtension, Icons.FILE);
     }
 
+    public File copy() {
+        return new File(getFolder(),getName(),getData());
+    }
+
     @Override
     public Icon getIcon() {
         return this.getFileExtension().getIcon();

@@ -119,6 +119,37 @@ public class Folder implements FileSystemItem {
         fileSystem.updateData();
     }
 
+    public boolean copyFile(String name) {
+        if(this.containsFile(name)) {
+            fileSystem.setClipboardItem(getFile(name).copy());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean cutFile(String name) {
+        if(copyFile(name)) {
+            deleteFile(name);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean pasteFile(boolean override) throws IOException {
+        if(fileSystem.getClipboardItem() instanceof File file) {
+            if (!override && this.containsFile(file.getName())) {
+                throw new IOException("File already exists: " + file.getName());
+            }else {
+                this.deleteFile(file.getName());
+                this.files.add(new File(this,file.getName(),file.getData()));
+                fileSystem.setClipboardItem(null);
+                fileSystem.updateData();
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String getName() {
         int index = this.path.lastIndexOf("\\");

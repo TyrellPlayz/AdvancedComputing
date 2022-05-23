@@ -21,6 +21,7 @@ public class StartMenu extends Content {
         this.computer = computer;
         this.setBorder(false);
         this.setMovable(false);
+        this.setShowIcon(false);
     }
 
     public void onLoad() {

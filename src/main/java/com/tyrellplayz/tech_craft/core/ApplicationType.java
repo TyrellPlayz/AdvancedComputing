@@ -1,6 +1,6 @@
 package com.tyrellplayz.tech_craft.core;
 
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import com.tyrellplayz.tech_craft.api.content.application.Application;
 import com.tyrellplayz.tech_craft.application.NoteApplication;
 import com.tyrellplayz.tech_craft.application.system.FileExplorerApplication;
@@ -31,7 +31,7 @@ public class ApplicationType<T extends Application> extends ForgeRegistryEntry<A
     }
 
     private static ResourceLocation modLoc(String name) {
-        return new ResourceLocation(TechCraft.MOD_ID,name);
+        return new ResourceLocation(AdvancedComputing.MOD_ID,name);
     }
 
     @SubscribeEvent

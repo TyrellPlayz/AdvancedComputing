@@ -1,6 +1,6 @@
 package com.tyrellplayz.tech_craft.data;
 
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -21,7 +21,7 @@ public class RecipeGen extends RecipeProvider {
     }
 
     private ResourceLocation modLoc(String path) {
-        return new ResourceLocation(TechCraft.MOD_ID,path);
+        return new ResourceLocation(AdvancedComputing.MOD_ID,path);
     }
 
     private String simpleItemName(ItemLike item) {

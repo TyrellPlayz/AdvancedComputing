@@ -2,9 +2,10 @@ package com.tyrellplayz.tech_craft.core.computer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import com.tyrellplayz.tech_craft.api.content.Content;
 import com.tyrellplayz.tech_craft.api.content.LayeredContent;
+import com.tyrellplayz.tech_craft.api.content.RightClickMenu;
 import com.tyrellplayz.tech_craft.api.content.application.Application;
 import com.tyrellplayz.tech_craft.api.content.application.ApplicationManifest;
 import com.tyrellplayz.tech_craft.api.content.dialog.Dialog;
@@ -28,12 +29,13 @@ import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientComputer extends GuiScreen implements ApplicationSystem, IFileSystem {
 
-    private final ResourceLocation GUI_SCREEN = new ResourceLocation(TechCraft.MOD_ID, "textures/gui/screen.png");
+    private final ResourceLocation GUI_SCREEN = new ResourceLocation(AdvancedComputing.MOD_ID, "textures/gui/screen.png");
 
     public static final int BORDER = 10;
     public final int SCREEN_WIDTH;
@@ -44,9 +46,12 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
     private final FileSystem fileSystem;
     private final CompoundTag systemData;
     private final Font systemFontRenderer;
+
     private final List<IWindow<? extends Content>> windows;
     private final Map<ResourceLocation, IWindow<? extends Content>> idWindowMap;
     private IWindow<? extends Content> focusedWindow;
+
+    private RightClickMenu rightClickMenu;
 
     public ClientComputer(ComputerBlockEntity tile) {
         super(new TextComponent("text_screen"), 384, 216);
@@ -191,16 +196,16 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
 
     @Nullable
     public Application getApplication(ResourceLocation id) {
-        if (!TechCraft.getApplicationManager().isApplicationLoaded(id)) {
+        if (!AdvancedComputing.getApplicationManager().isApplicationLoaded(id)) {
             return null;
         } else {
-            ApplicationManifest applicationManifest = TechCraft.getApplicationManager().getApplicationManifestFor(id);
+            ApplicationManifest applicationManifest = AdvancedComputing.getApplicationManager().getApplicationManifestFor(id);
             return !this.isApplicationOpen(id) ? null : (Application)((IWindow)this.idWindowMap.get(applicationManifest.getId())).getContent();
         }
     }
 
     public Collection<ApplicationManifest> getInstalledApplications() {
-        return TechCraft.getApplicationManager().getApplicationManifests().stream().sorted().collect(Collectors.toList());
+        return AdvancedComputing.getApplicationManager().getApplicationManifests().stream().sorted().collect(Collectors.toList());
     }
 
     public Application[] getRunningApplications() {
@@ -220,7 +225,7 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
             this.focusWindow(this.idWindowMap.get(id));
             return this.focusedWindow.getContent() instanceof Dialog ? (Application)((LayeredContent)this.focusedWindow.getContent()).getParentContent() : (Application)this.focusedWindow.getContent();
         } else {
-            Application application = TechCraft.getApplicationManager().createApplication(id);
+            Application application = AdvancedComputing.getApplicationManager().createApplication(id);
             if (application == null) {
                 return null;
             } else {
@@ -232,10 +237,10 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
     }
 
     public boolean isApplicationOpen(ResourceLocation id) {
-        if (!TechCraft.getApplicationManager().isApplicationLoaded(id)) {
+        if (!AdvancedComputing.getApplicationManager().isApplicationLoaded(id)) {
             return false;
         } else {
-            ApplicationManifest applicationManifest = TechCraft.getApplicationManager().getApplicationManifestFor(id);
+            ApplicationManifest applicationManifest = AdvancedComputing.getApplicationManager().getApplicationManifestFor(id);
             return applicationManifest != null && this.idWindowMap.containsKey(applicationManifest.getId());
         }
     }
@@ -249,8 +254,8 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
     }
 
     public void closeApplication(ResourceLocation id) {
-        if (TechCraft.getApplicationManager().isApplicationLoaded(id)) {
-            ApplicationManifest applicationManifest = TechCraft.getApplicationManager().getApplicationManifestFor(id);
+        if (AdvancedComputing.getApplicationManager().isApplicationLoaded(id)) {
+            ApplicationManifest applicationManifest = AdvancedComputing.getApplicationManager().getApplicationManifestFor(id);
             if (this.isApplicationOpen(id)) {
                 IWindow<? extends Content> window = this.idWindowMap.remove(applicationManifest.getId());
                 this.closeWindow(window);
@@ -259,7 +264,7 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
     }
 
     public void openDialog(Dialog dialog) {
-        IWindow<Dialog> window = new Window(dialog);
+        IWindow<Dialog> window = new Window<>(dialog);
         this.openWindow(window);
     }
 
@@ -267,10 +272,35 @@ public class ClientComputer extends GuiScreen implements ApplicationSystem, IFil
         this.closeWindow(dialog.getWindow());
     }
 
+    @Override
+    public void openRightClickMenu(RightClickMenu.Builder builder) {
+        if (!this.isStartMenuOpen()) {
+            RightClickMenu rightClickMenu = builder.build();
+            IWindow<? extends RightClickMenu> window = new Window<>(rightClickMenu);
+            this.openWindow(window);
+            window.setPosition(builder.getLeft(), builder.getTop());
+        }
+    }
+
+    @Override
+    public void closeRightClickMenu() {
+        if (this.isStartMenuOpen()) {
+            this.closeWindow(this.focusedWindow);
+        }
+    }
+
+    public RightClickMenu getRightClickMenu() {
+        return this.isRightClickMenuOpen() ? (RightClickMenu)this.focusedWindow.getContent() : null;
+    }
+
+    public boolean isRightClickMenuOpen() {
+        return this.focusedWindow != null && this.focusedWindow.getContent() instanceof RightClickMenu;
+    }
+
     public void openStartMenu() {
         if (!this.isStartMenuOpen()) {
             StartMenu startMenu = new StartMenu(this);
-            IWindow<? extends StartMenu> startMenuWindow = new Window(startMenu);
+            IWindow<? extends StartMenu> startMenuWindow = new Window<>(startMenu);
             this.openWindow(startMenuWindow);
             startMenuWindow.setPosition(0.0D, this.SCREEN_HEIGHT - 16 - 150);
         }

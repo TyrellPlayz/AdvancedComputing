@@ -1,6 +1,6 @@
 package com.tyrellplayz.tech_craft.network.handshake;
 
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import com.tyrellplayz.tech_craft.api.content.application.ApplicationManifest;
 import com.tyrellplayz.tech_craft.manager.ApplicationManager;
 import com.tyrellplayz.zlib.network.message.HandshakeMessage;
@@ -30,7 +30,7 @@ public class ClientboundManifestHandshake extends HandshakeMessage<ClientboundMa
 
     @Override
     public void writePacket(ClientboundManifestHandshake message, FriendlyByteBuf buf) {
-        message.applicationManifests = TechCraft.getApplicationManager().getApplicationManifests();
+        message.applicationManifests = AdvancedComputing.getApplicationManager().getApplicationManifests();
         buf.writeCollection(message.applicationManifests,(buf1, manifest) -> {
             ApplicationManifest.Serializer serializer = new ApplicationManifest.Serializer();
             serializer.toNetwork(buf,manifest);
@@ -49,13 +49,13 @@ public class ClientboundManifestHandshake extends HandshakeMessage<ClientboundMa
 
     @Override
     public void handlePacket(ClientboundManifestHandshake clientboundManifestHandshake, Supplier<NetworkEvent.Context> supplier) {
-        TechCraft.LOGGER.debug("Received application data from server");
+        AdvancedComputing.LOGGER.debug("Received application data from server");
         supplier.get().enqueueWork(() -> {
             ApplicationManager.handleUpdateManifestHandshake(this);
         });
         supplier.get().setPacketHandled(true);
-        TechCraft.LOGGER.info("Successfully synchronized {} application/s from server", this.applicationManifests.size());
-        TechCraft.NETWORK.getHandshakeChannel().reply(new ClientToServerAcknowledge(), supplier.get());
+        AdvancedComputing.LOGGER.info("Successfully synchronized {} application/s from server", this.applicationManifests.size());
+        AdvancedComputing.NETWORK.getHandshakeChannel().reply(new ClientToServerAcknowledge(), supplier.get());
     }
 
     public Collection<ApplicationManifest> getApplicationManifests() {

@@ -21,6 +21,8 @@ public class FileSystem {
     private final List<Folder> folders = new ArrayList();
     private String version;
 
+    private FileSystemItem clipboardItem;
+
     public FileSystem(System system, CompoundTag fileSystemData) {
         this.system = system;
         if (fileSystemData == null | fileSystemData.isEmpty()) {
@@ -135,6 +137,32 @@ public class FileSystem {
 
         }
         updateData();
+    }
+
+    public boolean copyFolder(String path) {
+        return true;
+    }
+
+    public boolean cutFolder(String path) {
+        return true;
+    }
+
+    public boolean pasteFolder(String path) {
+
+        setClipboardItem(null);
+        return true;
+    }
+
+    public boolean hasClipboard() {
+        return clipboardItem != null;
+    }
+
+    public void setClipboardItem(FileSystemItem clipboardItem) {
+        this.clipboardItem = clipboardItem;
+    }
+
+    public FileSystemItem getClipboardItem() {
+        return clipboardItem;
     }
 
     public boolean validatePath(String path) {

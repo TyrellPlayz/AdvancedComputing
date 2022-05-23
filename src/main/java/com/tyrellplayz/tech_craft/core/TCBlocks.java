@@ -1,6 +1,6 @@
 package com.tyrellplayz.tech_craft.core;
 
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import com.tyrellplayz.tech_craft.block.ComputerBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 public class TCBlocks {
 
-    public static final DeferredRegister<Block> REGISTER = DeferredRegister.create(ForgeRegistries.BLOCKS, TechCraft.MOD_ID);
+    public static final DeferredRegister<Block> REGISTER = DeferredRegister.create(ForgeRegistries.BLOCKS, AdvancedComputing.MOD_ID);
 
     public static final RegistryObject<Block> COMPUTER = register("computer", new ComputerBlock(BlockBehaviour.Properties.of(Material.METAL)), TCBlocks::tabBlockItem);
 
@@ -29,7 +29,7 @@ public class TCBlocks {
     }
 
     private static BlockItem tabBlockItem(Block block) {
-        return new BlockItem(block,new Item.Properties().tab(TechCraft.TAB));
+        return new BlockItem(block,new Item.Properties().tab(AdvancedComputing.TAB));
     }
 
 }

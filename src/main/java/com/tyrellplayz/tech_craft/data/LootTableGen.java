@@ -2,7 +2,7 @@ package com.tyrellplayz.tech_craft.data;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.data.loot.LootTableProvider;
@@ -41,7 +41,7 @@ public class LootTableGen extends LootTableProvider {
 
     @Override
     public String getName() {
-        return "LootTables: "+ TechCraft.MOD_ID;
+        return "LootTables: "+ AdvancedComputing.MOD_ID;
     }
 
     private static class Block extends BlockLoot {
@@ -53,7 +53,7 @@ public class LootTableGen extends LootTableProvider {
 
         @Override
         protected Iterable<net.minecraft.world.level.block.Block> getKnownBlocks() {
-            return ForgeRegistries.BLOCKS.getValues().stream().filter(block -> block.getRegistryName() != null && TechCraft.MOD_ID.equals(block.getRegistryName().getNamespace())).collect(Collectors.toSet());
+            return ForgeRegistries.BLOCKS.getValues().stream().filter(block -> block.getRegistryName() != null && AdvancedComputing.MOD_ID.equals(block.getRegistryName().getNamespace())).collect(Collectors.toSet());
         }
 
     }

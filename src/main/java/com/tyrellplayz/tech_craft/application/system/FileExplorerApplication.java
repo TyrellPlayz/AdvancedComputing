@@ -61,9 +61,13 @@ public class FileExplorerApplication extends Application {
             });
             this.fileBrowser.setOnFolderSelected((folder) -> {
                 this.deleteButton.setEnabled(folder != null);
+                this.copyButton.setEnabled(folder != null);
+                this.cutButton.setEnabled(folder != null);
             });
             this.fileBrowser.setOnFileSelected((file) -> {
                 this.deleteButton.setEnabled(file != null);
+                this.copyButton.setEnabled(file != null);
+                this.cutButton.setEnabled(file != null);
             });
             this.mainLayer.addComponent(this.fileBrowser);
             this.backButton = new Button(1, 1, Icons.LEFT_ARROW);
@@ -76,18 +80,59 @@ public class FileExplorerApplication extends Application {
             this.copyButton.setTooltip(new Tooltip("Copy"));
             this.copyButton.setEnabled(false);
             this.copyButton.setClickListener((mouseButton) -> {
+                FileSystemItem item = fileBrowser.getSelectedItem();
+                if(item instanceof Folder folder) {
+                    if (fileSystem.copyFolder(folder.getPath())) {
+                        pasteButton.setEnabled(true);
+                    }
+                }else if(item instanceof File file) {
+                    if (file.getFolder().copyFile(file.getName())) {
+                        pasteButton.setEnabled(true);
+                    }
+                }
+                fileBrowser.update();
             });
             this.mainLayer.addComponent(this.copyButton);
             this.cutButton = new Button(1, 39, Icons.CUT);
             this.cutButton.setTooltip(new Tooltip("Cut"));
             this.cutButton.setEnabled(false);
             this.cutButton.setClickListener((mouseButton) -> {
+                FileSystemItem item = fileBrowser.getSelectedItem();
+                if(item instanceof Folder folder) {
+                    if(fileSystem.cutFolder(folder.getPath())) {
+                        cutButton.setEnabled(false);
+                        copyButton.setEnabled(false);
+                        pasteButton.setEnabled(true);
+                    }
+                }else if(item instanceof File file) {
+                    if (file.getFolder().cutFile(file.getName())) {
+                        cutButton.setEnabled(false);
+                        copyButton.setEnabled(false);
+                        pasteButton.setEnabled(true);
+                    }
+                }
+                fileBrowser.update();
             });
             this.mainLayer.addComponent(this.cutButton);
             this.pasteButton = new Button(1, 58, Icons.CLIPBOARD);
             this.pasteButton.setTooltip(new Tooltip("Paste"));
-            this.pasteButton.setEnabled(false);
+            this.pasteButton.setEnabled(fileSystem.hasClipboard());
             this.pasteButton.setClickListener((mouseButton) -> {
+                if (fileSystem.hasClipboard()) {
+                    FileSystemItem item = fileSystem.getClipboardItem();
+                    if(item instanceof Folder folder) {
+                        fileSystem.pasteFolder(fileBrowser.getCurrentFolder().getPath());
+                        pasteButton.setEnabled(false);
+                    }else if(item instanceof File file) {
+                        try {
+                            fileBrowser.getCurrentFolder().pasteFile(false);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        pasteButton.setEnabled(false);
+                    }
+                    fileBrowser.update();
+                }
             });
             this.mainLayer.addComponent(this.pasteButton);
             this.newFolderButton = new Button(1, 77, Icons.NEW_FOLDER);
@@ -144,6 +189,14 @@ public class FileExplorerApplication extends Application {
             settingsShowFileExtensionsBox.setChecked(this.fileBrowser.isShowingFileExtensions());
             settingsShowFileExtensionsBox.setOnChecked(this::showFileExtensions);
             this.settingsLayer.addComponent(settingsShowFileExtensionsBox);
+
+            Button clearClipboardBtn = new Button(2,55,"Clear Clipboard");
+            clearClipboardBtn.setClickListener(i -> {
+                fileSystem.setClipboardItem(null);
+                pasteButton.setEnabled(false);
+            });
+            this.settingsLayer.addComponent(clearClipboardBtn);
+
             this.setActiveLayer(this.mainLayer);
         }
     }

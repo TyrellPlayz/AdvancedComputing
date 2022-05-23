@@ -1,6 +1,5 @@
 package com.tyrellplayz.tech_craft.blockentity;
 
-import com.tyrellplayz.tech_craft.TechCraft;
 import com.tyrellplayz.tech_craft.api.system.System;
 import com.tyrellplayz.tech_craft.core.computer.ClientComputer;
 import com.tyrellplayz.tech_craft.core.TCBlockEntities;

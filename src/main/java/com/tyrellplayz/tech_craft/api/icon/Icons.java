@@ -1,6 +1,6 @@
 package com.tyrellplayz.tech_craft.api.icon;
 
-import com.tyrellplayz.tech_craft.TechCraft;
+import com.tyrellplayz.tech_craft.AdvancedComputing;
 import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
@@ -40,7 +40,7 @@ public enum Icons implements Icon {
 
     Icons(String id, int xPos, int yPos) {
         this.colour = Color.WHITE;
-        this.id = new ResourceLocation(TechCraft.MOD_ID, id);
+        this.id = new ResourceLocation(AdvancedComputing.MOD_ID, id);
         this.xPos = xPos;
         this.yPos = yPos;
     }
@@ -93,6 +93,6 @@ public enum Icons implements Icon {
 
     @Override
     public ResourceLocation getImageLocation() {
-        return new ResourceLocation(TechCraft.MOD_ID, "textures/gui/icons.png");
+        return new ResourceLocation(AdvancedComputing.MOD_ID, "textures/gui/icons.png");
     }
 }
